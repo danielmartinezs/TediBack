@@ -1,6 +1,7 @@
 const { response } = require('express');
 const express = require('express');
 const dbconnect = require('../config/dbConnection.js');
+var mysql = require('mysql');
 
 const ingresaCuestionario = async (req, res) => {
     const { nombreCues,  } = req.body;
@@ -51,10 +52,9 @@ const getCuestionarios = async (req, res) => {
     })
 }
 
-const getQuestionnaires = async (req, res) => {
-    const { idcs } = req.body;
-
-    dbconnect.query('SELECT * FROM cuestionario_preguntas_respuestas', (error, response, fields) => {
+const getQuestionnairesDetails = async (req, res) => {
+    const { id } = req.params;
+    dbconnect.query('SELECT * FROM cuestionario_preguntas_respuestas WHERE idCuestionario = ?', [id], (error, response) => {
         if(error)
             console.log(error)
         else{
@@ -64,21 +64,23 @@ const getQuestionnaires = async (req, res) => {
 }
 
 const uploadQuestionnaires = async (req, res) => {
-    const { idc, respuestas } = req.body
-    if(!idc || !respuestas){
+    const { ida, idc, respuestas, comentarios } = req.body;
+    if(!ida || !idc || !respuestas || !comentarios){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
-    for(let i = 0; i<respuestas.length; i++){
-        let idpregunta = respuestas[i].id;
-        let respuesta = respuestas[i].value;
-        let comentario = respuestas[i].comment;
-        dbconnect.query('UPDATE `cuestionario_preguntas_respuestas` SET comentario = ?, seleccionada = ? WHERE idCuestionario = ? AND idPregunta = ?', [comentario, respuesta, idc, idpregunta], (error, response, fields) => {
-            if(error)
-                console.log(error)
-        })
-    }
-    return res.status(200).json(response)
+    dbconnect.query('INSERT INTO `cuestionario-alumno`(`idAlumno`, `idCuestionario`, `fecha`, `respuestas`, comentarios) VALUES (?,?,CURRENT_TIMESTAMP(),?,?)', [ida, idc, respuestas, comentarios], (error, response) => {
+        if(error)
+            console.log(error)
+        else{
+            response.message = "Respuestas registradas!";
+            return res.status(200).json(response)
+        }
+    })
 }
+
+const getMostRecentQuestionnaire = async (req, res) => {
+
+} 
 
 const validaNewQuestion = async (req, res) => {
     const { idp, ques } = req.body
@@ -202,4 +204,4 @@ const establishKeys = async (req, res) => {
     return res.status(200)
 }
 
-module.exports = { ingresaCuestionario, ingresaPreguntaRespuesta, getQuestions, getAnswers, getCuestionarios, getQuestionnaires, uploadQuestionnaires, uploadNewQuestionnaire, establishKeys }
+module.exports = { ingresaCuestionario, ingresaPreguntaRespuesta, getQuestions, getAnswers, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, uploadNewQuestionnaire, establishKeys }

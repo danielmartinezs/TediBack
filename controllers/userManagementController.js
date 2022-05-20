@@ -121,7 +121,7 @@ const ingresaAdmin = async (req, res) => {
 }
 
 const getAdmins = async (req, res) => {
-    dbconnect.query('SELECT * FROM admin', (error, response, fields) => {
+    dbconnect.query('SELECT * FROM admin', (error, response) => {
         if(error)
             console.log(error)
         else{
@@ -131,7 +131,7 @@ const getAdmins = async (req, res) => {
 }
 
 const getTutores = async (req, res) => {
-    dbconnect.query('SELECT * FROM info_tutor_alumno', (error, response, fields) => {
+    dbconnect.query('SELECT * FROM info_tutor_alumno', (error, response) => {
         if(error)
             console.log(error)
         else{
@@ -141,7 +141,7 @@ const getTutores = async (req, res) => {
 }
 
 const getAlumnos = async (req, res) => {
-    dbconnect.query('SELECT * FROM alumno', (error, response, fields) => {
+    dbconnect.query('SELECT * FROM alumno', (error, response) => {
         if(error)
             console.log(error)
         else{
@@ -272,6 +272,7 @@ const borraAdmin = async (req, res) => {
     if(error)
         console.log(error)
     else{
+        console.log(id)
         response.message = "Administrador borrado exitosamente!"
         dbconnect.query('SELECT idAdministrador FROM admin', (erro, resonse, fields) => {
             if(erro)
@@ -318,8 +319,19 @@ const ingresaHito = async (req, res) => {
 
 }
 
+const getHitosAlumno = async (req, res) => {
+    const { id } = req.params;
+    dbconnect.query('SELECT `alumno-hito`.idHito, `alumno-hito`.fecha, hito.descripcion FROM `alumno-hito`, hito WHERE `alumno-hito`.`idHito` = hito.idHito AND idAlumno = ?', [id], (error, response) => {
+        if(error)
+            console.log(error)
+        else{
+            res.send(response);
+        }
+    })
+}
+
 function isPassValid(str) {
     return /^(?=.*[0-9])(?=.*[#"!/()=?¿¡{}_$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(str);
 }
 
-module.exports = { ingresaTutor, ingresaAdmin, getAdmins, getTutores, getAlumnos, editaAlumno, editaTutor, editaAdmin, borraTutor, borraAdmin, ingresaHito }
+module.exports = { ingresaTutor, ingresaAdmin, getAdmins, getTutores, getAlumnos, editaAlumno, editaTutor, editaAdmin, borraTutor, borraAdmin, ingresaHito, getHitosAlumno }
