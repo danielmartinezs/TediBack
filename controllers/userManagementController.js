@@ -290,8 +290,36 @@ const borraAdmin = async (req, res) => {
     })
 }
 
+const ingresaHito = async (req, res) => {
+    const { ida, desc } = req.body;
+    if(!ida || !desc){
+        return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
+    }
+    dbconnect.query('SELECT idHito FROM hito', (er, resp) => {
+        if(er)
+            console.log(er)
+        else{
+            dbconnect.query('INSERT INTO hito (idHito, descripcion) VALUES (?, ?)', [resp.length+1, desc], (err, respo) => {
+                if(err)
+                    console.log(err)
+                else{
+                    dbconnect.query('INSERT INTO `alumno-hito`(idHito, idAlumno, fecha) VALUES (?,?, CURRENT_TIMESTAMP())', [resp.length+1, ida], (erro, respos) => {
+                        if(erro)
+                            console.log(erro)
+                        else{
+                            respos.message = "Nuevo hito registrado!";
+                            return res.status(200).json(respos);
+                        }
+                    })
+                }
+            })
+        }
+    })
+
+}
+
 function isPassValid(str) {
     return /^(?=.*[0-9])(?=.*[#"!/()=?¿¡{}_$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(str);
 }
 
-module.exports = { ingresaTutor, ingresaAdmin, getAdmins, getTutores, getAlumnos, editaAlumno, editaTutor, editaAdmin, borraTutor, borraAdmin }
+module.exports = { ingresaTutor, ingresaAdmin, getAdmins, getTutores, getAlumnos, editaAlumno, editaTutor, editaAdmin, borraTutor, borraAdmin, ingresaHito }

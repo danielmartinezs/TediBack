@@ -10,7 +10,7 @@ router.get('/getquestions', Cuestionarios.getQuestions);
 
 router.get('/getanswers', Cuestionarios.getAnswers);
 
-router.get('/getquestionnaires', Cuestionarios.getQuestionnaires);
+router.get('/getquestionnairesdetails', Cuestionarios.getQuestionnaires);
 
 router.get('/getcuestionarios', Cuestionarios.getCuestionarios);
 

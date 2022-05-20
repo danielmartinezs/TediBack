@@ -52,6 +52,8 @@ const getCuestionarios = async (req, res) => {
 }
 
 const getQuestionnaires = async (req, res) => {
+    const { idcs } = req.body;
+
     dbconnect.query('SELECT * FROM cuestionario_preguntas_respuestas', (error, response, fields) => {
         if(error)
             console.log(error)
@@ -76,6 +78,11 @@ const uploadQuestionnaires = async (req, res) => {
         })
     }
     return res.status(200).json(response)
+}
+
+const validaNewQuestion = async (req, res) => {
+    const { idp, ques } = req.body
+    dbconnect.query('')
 }
 
 const uploadNewQuestionnaire = async (req, res) => {
