@@ -24,6 +24,8 @@ router.post('/borraadmin/:id', userManager.borraAdmin);
 
 router.post('/newhito', userManager.ingresaHito);
 
+router.post('/borrahito/:id', userManager.borraHito);
+
 router.get('/gethitosa/:id', userManager.getHitosAlumno);
 
 module.exports = router;

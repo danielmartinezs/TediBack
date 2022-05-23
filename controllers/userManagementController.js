@@ -291,6 +291,31 @@ const borraAdmin = async (req, res) => {
     })
 }
 
+const borraHito = async (req, res) => {
+    const { id } = req.params;
+    dbconnect.query('DELETE FROM hito WHERE idHito = ?', [id], (error, response) => {
+    if(error)
+        console.log(error)
+    else{
+        console.log(id)
+        response.message = "Hito borrado exitosamente!"
+        dbconnect.query('SELECT idHito FROM hito', (erro, resonse) => {
+            if(erro)
+                console.log(erro)
+            else{
+                for(let i = 1; i<=resonse.length; i++){
+                    dbconnect.query('UPDATE hito SET idHito = '+i+' WHERE idHito = '+resonse[i-1].idHito, (err, resose) => {
+                        if(err)
+                            console.log(err)
+                    })
+                }
+            }
+        })
+        return res.status(200).json(response)
+    }
+    })
+}
+
 const ingresaHito = async (req, res) => {
     const { ida, desc } = req.body;
     if(!ida || !desc){
@@ -334,4 +359,4 @@ function isPassValid(str) {
     return /^(?=.*[0-9])(?=.*[#"!/()=?¿¡{}_$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(str);
 }
 
-module.exports = { ingresaTutor, ingresaAdmin, getAdmins, getTutores, getAlumnos, editaAlumno, editaTutor, editaAdmin, borraTutor, borraAdmin, ingresaHito, getHitosAlumno }
+module.exports = { ingresaTutor, ingresaAdmin, getAdmins, getTutores, getAlumnos, editaAlumno, editaTutor, editaAdmin, borraTutor, borraAdmin, ingresaHito, borraHito, getHitosAlumno }
