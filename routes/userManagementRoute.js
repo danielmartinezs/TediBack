@@ -26,6 +26,8 @@ router.post('/newhito', userManager.ingresaHito);
 
 router.post('/borrahito/:id', userManager.borraHito);
 
+router.post('/editahito', userManager.editaHito);
+
 router.get('/gethitosa/:id', userManager.getHitosAlumno);
 
 module.exports = router;
