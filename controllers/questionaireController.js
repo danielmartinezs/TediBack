@@ -78,6 +78,18 @@ const uploadQuestionnaires = async (req, res) => {
     })
 }
 
+const getLatestEntry = async (req, res) => {
+    const { id } = req.params;
+    //dbconnect.query('SELECT MAX(fecha) AS ultimoregistro FROM `cuestionario-alumno` WHERE idAlumno=?', [id], (err, response) => {
+    dbconnect.query('SELECT CONVERT_TZ(MAX(fecha), '+"'"+"+00:00"+"'"+', '+"'"+"-05:00"+"'"+') AS ultimoregistro FROM `cuestionario-alumno` WHERE idAlumno=?', [id], (err, response) => {
+        if(err)
+            console.log(err)
+        else{
+            res.send(response)
+        }
+    })
+}
+
 const getMostRecentQuestionnaire = async (req, res) => {
 
 } 
@@ -133,6 +145,14 @@ const uploadNewQuestionnaire = async (req, res) => {
                 })
             }
         })
+        dbconnect.query('INSERT INTO `pregunta-respuesta`(idPregunta, idRespuesta, comentario, seleccionada) VALUES (?,?," "," ")', [idpregunta, idrespuesta], (er, re) => {
+            if(er)
+                console.log(er)
+        })
+        /*dbconnect.query('INSERT INTO `cuestionario-pregunta`(idCuestionario, idPregunta, idRespuesta) VALUES (?,?,?)', [idc, idpregunta, idrespuesta], (er, re) => {
+            if(er)
+                console.log(er)
+        }) */
     }
     return res.status(200)
 }
@@ -142,6 +162,7 @@ const establishKeys = async (req, res) => {
     if(!idc || !qa){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
+    console.log("inside establish new keys")
     for(let i = 0; i<qa.length; i++){
         let idpregunta = qa[i].idPregunta;
         console.log(idpregunta)
@@ -204,4 +225,4 @@ const establishKeys = async (req, res) => {
     return res.status(200)
 }
 
-module.exports = { ingresaCuestionario, ingresaPreguntaRespuesta, getQuestions, getAnswers, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, uploadNewQuestionnaire, establishKeys }
+module.exports = { ingresaCuestionario, ingresaPreguntaRespuesta, getQuestions, getAnswers, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, getLatestEntry, uploadNewQuestionnaire, establishKeys }

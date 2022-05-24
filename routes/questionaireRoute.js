@@ -12,6 +12,8 @@ router.get('/getanswers', Cuestionarios.getAnswers);
 
 router.get('/getquestionnairesdetails/:id', Cuestionarios.getQuestionnairesDetails);
 
+router.get('/getrecententry/:id', Cuestionarios.getLatestEntry);
+
 router.get('/getcuestionarios', Cuestionarios.getCuestionarios);
 
 router.post('/uploadquestionnaire', Cuestionarios.uploadQuestionnaires);

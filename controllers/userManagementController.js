@@ -321,7 +321,6 @@ const editaHito = async (req, res) => {
     if(!idh || !timestamp || !desc){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
-    console.log(timestamp)
     dbconnect.query('UPDATE hito SET descripcion = ? WHERE idHito = ?', [desc, idh], (er, resp) => {
         if(er)
             console.log(er)
