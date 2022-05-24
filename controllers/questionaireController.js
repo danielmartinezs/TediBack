@@ -115,21 +115,22 @@ const uploadNewQuestionnaire = async (req, res) => {
     if(!idc || !nombrec || !materia  || !qa){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
+    console.log(qa)
     dbconnect.query('INSERT INTO cuestionario(idCuestionario, nombre, materia) VALUES (?,?,?)', [idc, nombrec, materia], (er, re) => {
         if(er)
             console.log(er)
     })
     for(let i = 0; i<qa.length; i++){
         let idpregunta = qa[i].idPregunta;
-        console.log(idpregunta)
+        //console.log(idpregunta)
         let idrespuesta = qa[i].idRespuesta;
-        console.log(idrespuesta)
+        //console.log(idrespuesta)
         let respuesta = qa[i].respuesta;
-        console.log(respuesta)
+        //console.log(respuesta)
         let pregunta = qa[i].pregunta;
-        console.log(pregunta)
+        //console.log(pregunta)
         let tipop = qa[i].tipop;
-        console.log(tipop)
+        //console.log(tipop)
         dbconnect.query('SELECT idRespuesta FROM respuesta WHERE opciones = ?', [respuesta], (er, re) => {
             if(er)
                 console.log(er)
@@ -140,6 +141,7 @@ const uploadNewQuestionnaire = async (req, res) => {
                 dbconnect.query('INSERT INTO respuesta(idRespuesta, opciones) VALUES (?,?)', [idrespuesta, respuesta], (err, res) => {
                     if(err)
                         console.log(err)
+                     console.log("consulta de INSERT nueva respuesta")
                 })
             }
         })
@@ -153,19 +155,21 @@ const uploadNewQuestionnaire = async (req, res) => {
                 dbconnect.query('INSERT INTO preguntas(idPregunta, pregunta, tipo) VALUES (?,?,?)', [idpregunta, pregunta, tipop], (err, res) => {
                     if(err)
                         console.log(err)
+                        console.log("consulta de INSERT nueva pregunta")
                 })
             }
         })
-        dbconnect.query('INSERT INTO `pregunta-respuesta`(idPregunta, idRespuesta, comentario, seleccionada) VALUES (?,?," "," ")', [idpregunta, idrespuesta], (er, re) => {
+    }
+     /* dbconnect.query('INSERT INTO `pregunta-respuesta`(idPregunta, idRespuesta, comentario, seleccionada) VALUES (?,?,"","")', [idpregunta, idrespuesta], (er, re) => {
             if(er)
                 console.log(er)
+            console.log("consulta de INSERT nuevo valor en la tabla de relacion pregunta-respuesta")
         })
-        /*dbconnect.query('INSERT INTO `cuestionario-pregunta`(idCuestionario, idPregunta, idRespuesta) VALUES (?,?,?)', [idc, idpregunta, idrespuesta], (er, re) => {
+        dbconnect.query('INSERT INTO `cuestionario-pregunta`(idCuestionario, idPregunta, idRespuesta) VALUES (?,?,?)', [idc, idpregunta, idrespuesta], (er, re) => {
             if(er)
                 console.log(er)
         }) */
-    }
-    return res.status(200)
+    res.status(200).send({message: "Registros subidos!"})
 }
 
 const establishKeys = async (req, res) => {
