@@ -18,6 +18,8 @@ router.get('/getcuestionarios', Cuestionarios.getCuestionarios);
 
 router.post('/uploadquestionnaire', Cuestionarios.uploadQuestionnaires);
 
+router.post('/editquestionnaire', Cuestionarios.editQuestionnaires);
+
 router.post('/uploadnewquestionnaire', Cuestionarios.uploadNewQuestionnaire);
 
 router.post('/establishnewkeys', Cuestionarios.establishKeys)

@@ -78,6 +78,21 @@ const uploadQuestionnaires = async (req, res) => {
     })
 }
 
+const editQuestionnaires = async (req, res) => {
+    const { ida, idc, timestamp, respuestas, comentarios } = req.body;
+    if(!ida || !idc || !timestamp || !respuestas || !comentarios){
+        return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
+    }
+    dbconnect.query('UPDATE `cuestionario-alumno` SET idAlumno=?, idCuestionario=?, respuestas=?,`comentarios`=? WHERE fecha=?', [ida, idc, respuestas, comentarios, timestamp], (error, response) => {
+        if(error)
+            console.log(error)
+        else{
+            response.message = "Respuestas actualizadas!";
+            return res.status(200).json(response)
+        }
+    })
+} 
+
 const getLatestEntry = async (req, res) => {
     const { id } = req.params;
     //dbconnect.query('SELECT MAX(fecha) AS ultimoregistro FROM `cuestionario-alumno` WHERE idAlumno=?', [id], (err, response) => {
@@ -89,10 +104,6 @@ const getLatestEntry = async (req, res) => {
         }
     })
 }
-
-const getMostRecentQuestionnaire = async (req, res) => {
-
-} 
 
 const validaNewQuestion = async (req, res) => {
     const { idp, ques } = req.body
@@ -225,4 +236,4 @@ const establishKeys = async (req, res) => {
     return res.status(200)
 }
 
-module.exports = { ingresaCuestionario, ingresaPreguntaRespuesta, getQuestions, getAnswers, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, getLatestEntry, uploadNewQuestionnaire, establishKeys }
+module.exports = { ingresaCuestionario, ingresaPreguntaRespuesta, getQuestions, getAnswers, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, editQuestionnaires, getLatestEntry, uploadNewQuestionnaire, establishKeys }
