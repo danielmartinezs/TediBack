@@ -112,10 +112,13 @@ const validaNewQuestion = async (req, res) => {
 
 const uploadNewQuestionnaire = async (req, res) => {
     const { idc, nombrec, materia, qa } = req.body
+    console.log(idc)
+    console.log(nombrec)
+    console.log(materia)
+    console.log(qa)
     if(!idc || !nombrec || !materia  || !qa){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
-    console.log(qa)
     dbconnect.query('INSERT INTO cuestionario(idCuestionario, nombre, materia) VALUES (?,?,?)', [idc, nombrec, materia], (er, re) => {
         if(er)
             console.log(er)
