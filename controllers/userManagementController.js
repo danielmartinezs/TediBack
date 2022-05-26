@@ -39,7 +39,7 @@ const ingresaTutor = async (req, res) => {
                                     console.log(er)
                                 const newtid = (re.length)+1;
                                 bcrypt.hash(password, salty, function(err, hash) {
-                                    dbconnect.query('INSERT INTO tutor(idTutor, usuario, contrasenia) VALUES (?, ?, ?)', [newtid, nombretut, hash], (error, response, fields) => {
+                                    dbconnect.query('INSERT INTO tutor(idTutor, usuario, contrasenia) VALUES (?, ?, "'+hash+'")', [newtid, nombretut], (error, response, fields) => {
                                         if(error)
                                             console.log(error)
                                         else{
@@ -155,8 +155,9 @@ const editaAlumno = async (req, res) => {
     if(!idal || !nombrealu || !apellidoalu || !nacimiento || !schoolmester || !foto){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
+    console.log(foto)
     const fullname = nombrealu+" "+apellidoalu;
-    dbconnect.query('UPDATE alumno SET nombre = ?, fechaNacimiento = ?, anioEscolar = ?, fotografia = ? WHERE idAlumno = ?', [fullname, nacimiento, schoolmester, foto, idal], (err, reso, fields) => {
+    dbconnect.query('UPDATE alumno SET nombre = ?, fechaNacimiento = ?, anioEscolar = ? WHERE idAlumno = ?', [fullname, nacimiento, schoolmester, idal], (err, reso) => {
         if(err)
             console.log(err)
         else{

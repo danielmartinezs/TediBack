@@ -10,7 +10,7 @@ const login = async (req, res) => {
     if(!user || !password || !role){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
-    dbconnect.query('SELECT * FROM `'+role+'` WHERE usuario = ?', [user], (err, response, fields) => {
+    dbconnect.query('SELECT * FROM `'+role+'` WHERE usuario = ?', [user], (err, response) => {
         if(err) 
             console.log(err)
         else if(response.length === 0){
