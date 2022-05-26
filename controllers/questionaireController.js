@@ -112,10 +112,10 @@ const validaNewQuestion = async (req, res) => {
 
 const uploadNewQuestionnaire = async (req, res) => {
     const { idc, nombrec, materia, qa } = req.body
-    console.log(idc)
-    console.log(nombrec)
-    console.log(materia)
-    console.log(qa)
+    //console.log(idc)
+    //console.log(nombrec)
+    //console.log(materia)
+    //console.log(qa)
     if(!idc || !nombrec || !materia  || !qa){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
@@ -163,15 +163,6 @@ const uploadNewQuestionnaire = async (req, res) => {
             }
         })
     }
-     /* dbconnect.query('INSERT INTO `pregunta-respuesta`(idPregunta, idRespuesta, comentario, seleccionada) VALUES (?,?,"","")', [idpregunta, idrespuesta], (er, re) => {
-            if(er)
-                console.log(er)
-            console.log("consulta de INSERT nuevo valor en la tabla de relacion pregunta-respuesta")
-        })
-        dbconnect.query('INSERT INTO `cuestionario-pregunta`(idCuestionario, idPregunta, idRespuesta) VALUES (?,?,?)', [idc, idpregunta, idrespuesta], (er, re) => {
-            if(er)
-                console.log(er)
-        }) */
     res.status(200).send({message: "Registros subidos!"})
 }
 
@@ -180,12 +171,9 @@ const establishKeys = async (req, res) => {
     if(!idc || !qa){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
-    console.log("inside establish new keys")
     for(let i = 0; i<qa.length; i++){
         let idpregunta = qa[i].idPregunta;
-        console.log(idpregunta)
         let idrespuesta = qa[i].idRespuesta;
-        console.log(idrespuesta)
         dbconnect.query('SELECT idPregunta FROM `pregunta-respuesta` WHERE idRespuesta = ?', [idrespuesta], (er, re) => {
             if(er)
                 console.log(er)
