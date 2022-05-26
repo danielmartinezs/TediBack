@@ -18,7 +18,9 @@ router.get('/getcuestionarios', Cuestionarios.getCuestionarios);
 
 router.post('/uploadquestionnaire', Cuestionarios.uploadQuestionnaires);
 
-router.post('/editquestionnaire', Cuestionarios.editQuestionnaires);
+router.post('/edituploadedquestionnaire', Cuestionarios.editUploadedQuestionnaire);
+
+router.post('/editquestionnaire/:id', Cuestionarios.editQuestionnaire);
 
 router.post('/uploadnewquestionnaire', Cuestionarios.uploadNewQuestionnaire);
 

@@ -4,4 +4,6 @@ const Reportes = require('../controllers/reportController.js');
 
 router.get('/generareporte', Reportes.descargaReporte)
 
+router.get('/holamundo', Reportes.holaMundo)
+
 module.exports = router

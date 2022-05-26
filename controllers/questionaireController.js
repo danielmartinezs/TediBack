@@ -43,7 +43,7 @@ const getAnswers = async (req, res) => {
 }
 
 const getCuestionarios = async (req, res) => {
-    dbconnect.query('SELECT idCuestionario, nombre, materia FROM cuestionario', (error, response, fields) => {
+    dbconnect.query('SELECT idCuestionario, nombre, materia FROM cuestionario', (error, response) => {
         if(error)
             console.log(error)
         else{
@@ -78,7 +78,7 @@ const uploadQuestionnaires = async (req, res) => {
     })
 }
 
-const editQuestionnaires = async (req, res) => {
+const editUploadedQuestionnaire = async (req, res) => {
     const { ida, idc, timestamp, respuestas, comentarios } = req.body;
     if(!ida || !idc || !timestamp || !respuestas || !comentarios){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
@@ -93,6 +93,17 @@ const editQuestionnaires = async (req, res) => {
     })
 } 
 
+const editQuestionnaire = async (req, res) => {
+    const { id } = req.body;
+    dbconnect.query('SELECT CONVERT_TZ(MAX(fecha), '+"'"+"+00:00"+"'"+', '+"'"+"-05:00"+"'"+') AS ultimoregistro FROM `cuestionario-alumno` WHERE idAlumno=?', [id], (err, response) => {
+        if(err)
+            console.log(err)
+        else{
+            res.send(response)
+        }
+    })
+}
+
 const getLatestEntry = async (req, res) => {
     const { id } = req.params;
     //dbconnect.query('SELECT MAX(fecha) AS ultimoregistro FROM `cuestionario-alumno` WHERE idAlumno=?', [id], (err, response) => {
@@ -103,11 +114,6 @@ const getLatestEntry = async (req, res) => {
             res.send(response)
         }
     })
-}
-
-const validaNewQuestion = async (req, res) => {
-    const { idp, ques } = req.body
-    dbconnect.query('')
 }
 
 const uploadNewQuestionnaire = async (req, res) => {
@@ -231,4 +237,4 @@ const establishKeys = async (req, res) => {
     return res.status(200)
 }
 
-module.exports = { ingresaCuestionario, ingresaPreguntaRespuesta, getQuestions, getAnswers, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, editQuestionnaires, getLatestEntry, uploadNewQuestionnaire, establishKeys }
+module.exports = { ingresaCuestionario, ingresaPreguntaRespuesta, getQuestions, getAnswers, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, editQuestionnaire, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, establishKeys }
