@@ -10,6 +10,8 @@ router.get('/getadmins', userManager.getAdmins);
 
 router.get('/getalumnos', userManager.getAlumnos);
 
+router.get('/getalumno/:id', userManager.getAlumno);
+
 router.get('/gettutores', userManager.getTutores);
 
 router.post('/editatutor', userManager.editaTutor);
