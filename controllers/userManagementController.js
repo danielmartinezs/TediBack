@@ -150,6 +150,17 @@ const getAlumnos = async (req, res) => {
     })
 }
 
+const getAlumno = async (req, res) => {
+    const { id } = req.params;
+    dbconnect.query('SELECT * FROM alumnoSELECT alumno.nombre, alumno.fechaNacimiento, alumno.anioEscolar, alumno.fotografia FROM alumno, `tutor-alumno`, tutor WHERE alumno.idAlumno = `tutor-alumno`.`idAlumno` AND tutor.idTutor = `tutor-alumno`.`idTutor` AND tutor.idTutor = ?', [id], (error, response) => {
+        if(error)
+            console.log(error)
+        else{
+            res.send(response);
+        }
+    })
+}
+
 const editaAlumno = async (req, res) => {
     const { idal, nombrealu, apellidoalu, nacimiento, schoolmester, foto } = req.body;
     if(!idal || !nombrealu || !apellidoalu || !nacimiento || !schoolmester || !foto){
@@ -381,4 +392,4 @@ function isPassValid(str) {
     return /^(?=.*[0-9])(?=.*[#"!/()=?¿¡{}_$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(str);
 }
 
-module.exports = { ingresaTutor, ingresaAdmin, getAdmins, getTutores, getAlumnos, editaAlumno, editaTutor, editaAdmin, borraTutor, borraAdmin, ingresaHito, borraHito, editaHito, getHitosAlumno }
+module.exports = { ingresaTutor, ingresaAdmin, getAdmins, getTutores, getAlumnos, getAlumno, editaAlumno, editaTutor, editaAdmin, borraTutor, borraAdmin, ingresaHito, borraHito, editaHito, getHitosAlumno }
