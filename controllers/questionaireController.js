@@ -52,12 +52,89 @@ const addQuestion = async (req, res) => {
     if(!idc || !pregunta || !tipo || !respuesta){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
-    dbconnect.query('INSERT INTO preguntas(pregunta, tipo) VALUES (?,?)', [pregunta, tipo], (error, response) => {
-        if(error)
-            console.log(error)
-        else{
-            response.message = "Pregunta agregada!";
-            return res.status(200).json(response)
+    dbconnect.query('SELECT `idPregunta` FROM `preguntas` WHERE `pregunta` = ?', [pregunta], (er, re) => {
+        if(er)
+            console.log(er)
+        else if(re.length !== 0){
+            let idp = re[0].idPregunta;
+            dbconnect.query('INSERT INTO preguntas(idPregunta, pregunta, tipo) VALUES (?, ?, ?)', [idp, pregunta, tipo], (er, re) => {
+                if(er)
+                    console.log(er)
+                else{
+                    dbconnect.query('SELECT idRespuesta FROM respuesta WHERE opciones = ?', [respuesta], (err, resp) => {
+                        if(err)
+                            console.log(err)
+                        else if(resp.length !== 0){
+                            let idr = res[0].idRespuesta;
+                            dbconnect.query('INSERT INTO respuesta(idRespuesta, opciones) VALUES (?,?)', [idr, respuesta], (err, respo) => {
+                                if(err)
+                                    console.log(err)
+                                else{
+                                    return res.status(200).json;                                    
+                                }
+                            })
+                        }else{
+                            dbconnect.query('SELECT MAX(idRespuesta) FROM respuesta', (err, resp) => {
+                                if(err)
+                                    console.log(err)
+                                else{
+                                    let idr = resp[0]['MAX(idRespuesta)']+1;
+                                    dbconnect.query('INSERT INTO `respuesta`(`idRespuesta`, `opciones`) VALUES (?,?)', [idr, respuesta], (err, reso) => {
+                                        if(err)
+                                            console.log(err)
+                                        else{
+                                            return res.status(200).json;
+                                        }
+                                    })
+                                }
+                            })
+                        }})
+                }
+            })
+        }else{
+            dbconnect.query('SELECT MAX(idPregunta) FROM preguntas', (err, res) => {
+                if(err)
+                    console.log(err)
+                else{
+                    let idp = res[0]['MAX(idPregunta)']+1;
+                    dbconnect.query('INSERT INTO preguntas(idPregunta, pregunta, tipo) VALUES (?, ?, ?)', [idp, pregunta, tipo], (er, re) => {
+                        if(er)
+                            console.log(er)
+                        else{
+                            dbconnect.query('SELECT idRespuesta FROM respuesta WHERE opciones = ?', [respuesta], (err, res) => {
+                                if(err)
+                                    console.log(err)
+                                else if(res.length !== 0){
+                                    let idr = res[0].idRespuesta;
+                                    dbconnect.query('INSERT INTO respuesta(idRespuesta, opciones) VALUES (?,?)', [idr, respuesta], (err, res) => {
+                                        if(err)
+                                            console.log(err)
+                                        else{
+                                            return res.status(200).json;                                    
+                                        }
+                                    })
+                                }
+                                else{
+                                    dbconnect.query('SELECT MAX(idRespuesta) FROM respuesta', (err, res) => {
+                                        if(err)
+                                            console.log(err)
+                                        else{
+                                            let idr = res[0]['MAX(idRespuesta)']+1;
+                                            dbconnect.query('INSERT INTO `respuesta`(`idRespuesta`, `opciones`) VALUES (?,?)', [idr, respuesta], (err, res) => {
+                                                if(err)
+                                                    console.log(err)
+                                                else{
+                                                    return res.status(200).json;
+                                                }
+                                            })
+                                        }
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
+            })
         }
     })
 }

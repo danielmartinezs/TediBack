@@ -10,7 +10,7 @@ router.get('/getquestions', Cuestionarios.getQuestions);
 
 router.post('/editquestion', Cuestionarios.editQuestion);
 
-router.post('/questionnaires/addquestion', Cuestionarios.addQuestion);
+router.post('/addquestion', Cuestionarios.addQuestion);
 
 router.get('/getanswers', Cuestionarios.getAnswers);
 
