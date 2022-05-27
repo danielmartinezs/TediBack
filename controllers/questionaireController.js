@@ -47,6 +47,21 @@ const editQuestion = async (req, res) => {
     })
 }
 
+const addQuestion = async (req, res) => {
+    const { idc, pregunta, tipo, respuesta } = req.body;
+    if(!idc || !pregunta || !tipo || !respuesta){
+        return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
+    }
+    dbconnect.query('INSERT INTO preguntas(pregunta, tipo) VALUES (?,?)', [pregunta, tipo], (error, response) => {
+        if(error)
+            console.log(error)
+        else{
+            response.message = "Pregunta agregada!";
+            return res.status(200).json(response)
+        }
+    })
+}
+
 const getAnswers = async (req, res) => {
     dbconnect.query('SELECT idRespuesta AS id, opciones FROM respuesta', (error, response) => {
         if(error)
@@ -64,6 +79,21 @@ const getAnswer = async (req, res) => {
             console.log(error)
         else{
             res.send(response);
+        }
+    })
+}
+
+const editAnswer = async (req, res) => {
+    const { idr, opciones } = req.body;
+    if(!idr || !opciones){
+        return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
+    }
+    dbconnect.query('UPDATE respuesta SET opciones = ? WHERE idRespuesta = ?', [opciones, idr], (error, response) => {
+        if(error)
+            console.log(error)
+        else{
+            response.message = "Respuesta editada!";
+            return res.status(200).json(response);
         }
     })
 }
@@ -106,7 +136,6 @@ const uploadQuestionnaires = async (req, res) => {
 
 const editUploadedQuestionnaire = async (req, res) => {
     const { ida, idc, timestamp, respuestas, comentarios, puntaje } = req.body;
-    console.log(puntaje)
     if(!ida || !idc || !timestamp || !respuestas || !comentarios || !puntaje){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
@@ -120,8 +149,16 @@ const editUploadedQuestionnaire = async (req, res) => {
     })
 } 
 
-const editQuestionnaire = async (req, res) => {
-    
+const borrarCuestionario = async (req, res) => {
+    const { id } = req.params;
+    dbconnect.query('DELETE FROM `cuestionario` WHERE idCuestionario = ?', [id], (error, response) => {
+        if(error)
+            console.log(error)
+        else{
+            response.message = "Cuestionario borrado!";
+            return res.status(200).json(response)
+        }
+    })
 }
 
 const getLatestEntry = async (req, res) => {
@@ -257,4 +294,4 @@ const establishKeys = async (req, res) => {
     return res.status(200)
 }
 
-module.exports = { ingresaCuestionario, ingresaPreguntaRespuesta, getQuestions, editQuestion, getAnswers, getAnswer, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, editQuestionnaire, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, establishKeys }
+module.exports = { ingresaCuestionario, ingresaPreguntaRespuesta, getQuestions, editQuestion, addQuestion, getAnswers, getAnswer, editAnswer, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, borrarCuestionario, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, establishKeys }
