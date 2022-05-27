@@ -8,6 +8,8 @@ router.post('/newansweredquestion', Cuestionarios.ingresaPreguntaRespuesta);
 
 router.get('/getquestions', Cuestionarios.getQuestions);
 
+router.post('/editquestion', Cuestionarios.editQuestion);
+
 router.get('/getanswers', Cuestionarios.getAnswers);
 
 router.get('/getanswer/:id', Cuestionarios.getAnswer);

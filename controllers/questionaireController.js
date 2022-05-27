@@ -32,6 +32,21 @@ const getQuestions = async (req, res) => {
     })
 }
 
+const editQuestion = async (req, res) => {
+    const { idp, pregunta } = req.body;
+    if(!idp || !pregunta){
+        return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
+    }
+    dbconnect.query('UPDATE preguntas SET pregunta = ? WHERE idPregunta = ?', [pregunta, idp], (erro, reponse) => {
+        if(erro)
+            console.log(erro)
+        else{
+            reponse.message = "Pregunta editada!";
+            return res.status(200).json(reponse)
+        }
+    })
+}
+
 const getAnswers = async (req, res) => {
     dbconnect.query('SELECT idRespuesta AS id, opciones FROM respuesta', (error, response) => {
         if(error)
@@ -75,11 +90,11 @@ const getQuestionnairesDetails = async (req, res) => {
 }
 
 const uploadQuestionnaires = async (req, res) => {
-    const { ida, idc, respuestas, comentarios } = req.body;
-    if(!ida || !idc || !respuestas || !comentarios){
+    const { ida, idc, respuestas, comentarios, puntaje } = req.body;
+    if(!ida || !idc || !respuestas || !comentarios || !puntaje){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
-    dbconnect.query('INSERT INTO `cuestionario-alumno`(`idAlumno`, `idCuestionario`, `fecha`, `respuestas`, comentarios) VALUES (?,?,CURRENT_TIMESTAMP(),?,?)', [ida, idc, respuestas, comentarios], (error, response) => {
+    dbconnect.query('INSERT INTO `cuestionario-alumno`(idAlumno, idCuestionario, fecha, respuestas, comentarios, puntaje) VALUES (?,?,CURRENT_TIMESTAMP(),?,?,?)', [ida, idc, respuestas, comentarios, puntaje], (error, response) => {
         if(error)
             console.log(error)
         else{
@@ -90,11 +105,12 @@ const uploadQuestionnaires = async (req, res) => {
 }
 
 const editUploadedQuestionnaire = async (req, res) => {
-    const { ida, idc, timestamp, respuestas, comentarios } = req.body;
-    if(!ida || !idc || !timestamp || !respuestas || !comentarios){
+    const { ida, idc, timestamp, respuestas, comentarios, puntaje } = req.body;
+    console.log(puntaje)
+    if(!ida || !idc || !timestamp || !respuestas || !comentarios || !puntaje){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
-    dbconnect.query('UPDATE `cuestionario-alumno` SET idAlumno=?, idCuestionario=?, respuestas=?,`comentarios`=? WHERE fecha=?', [ida, idc, respuestas, comentarios, timestamp], (error, response) => {
+    dbconnect.query('UPDATE `cuestionario-alumno` SET idAlumno=?, idCuestionario=?, respuestas=?, comentarios=?, puntaje=? WHERE fecha=?', [ida, idc, respuestas, comentarios, puntaje, timestamp], (error, response) => {
         if(error)
             console.log(error)
         else{
@@ -241,4 +257,4 @@ const establishKeys = async (req, res) => {
     return res.status(200)
 }
 
-module.exports = { ingresaCuestionario, ingresaPreguntaRespuesta, getQuestions, getAnswers, getAnswer, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, editQuestionnaire, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, establishKeys }
+module.exports = { ingresaCuestionario, ingresaPreguntaRespuesta, getQuestions, editQuestion, getAnswers, getAnswer, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, editQuestionnaire, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, establishKeys }

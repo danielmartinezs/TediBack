@@ -17,6 +17,7 @@ app.use('/login', require('./routes/loginRoute.js'));
 app.use('/profiles', require('./routes/userManagementRoute.js'));
 app.use('/questionnaires', require('./routes/questionaireRoute.js'));
 app.use('/reports', require('./routes/reportRoute.js'));
+app.use('/graphs', require('./routes/graphRoute.js'));
 
 app.listen(app.get('port'), function(){
     console.log(`express server running on port`, app.get('port'));
