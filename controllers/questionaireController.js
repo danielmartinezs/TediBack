@@ -42,6 +42,17 @@ const getAnswers = async (req, res) => {
     })
 }
 
+const getAnswer = async (req, res) => {
+    const { id } = req.params;
+    dbconnect.query('SELECT idRespuesta AS id, opciones FROM respuesta WHERE idRespuesta = ?', [id], (error, response) => {
+        if(error)
+            console.log(error)
+        else{
+            res.send(response);
+        }
+    })
+}
+
 const getCuestionarios = async (req, res) => {
     dbconnect.query('SELECT idCuestionario, nombre, materia FROM cuestionario', (error, response) => {
         if(error)
@@ -94,14 +105,7 @@ const editUploadedQuestionnaire = async (req, res) => {
 } 
 
 const editQuestionnaire = async (req, res) => {
-    const { id } = req.body;
-    dbconnect.query('SELECT CONVERT_TZ(MAX(fecha), '+"'"+"+00:00"+"'"+', '+"'"+"-05:00"+"'"+') AS ultimoregistro FROM `cuestionario-alumno` WHERE idAlumno=?', [id], (err, response) => {
-        if(err)
-            console.log(err)
-        else{
-            res.send(response)
-        }
-    })
+    
 }
 
 const getLatestEntry = async (req, res) => {
@@ -237,4 +241,4 @@ const establishKeys = async (req, res) => {
     return res.status(200)
 }
 
-module.exports = { ingresaCuestionario, ingresaPreguntaRespuesta, getQuestions, getAnswers, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, editQuestionnaire, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, establishKeys }
+module.exports = { ingresaCuestionario, ingresaPreguntaRespuesta, getQuestions, getAnswers, getAnswer, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, editQuestionnaire, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, establishKeys }

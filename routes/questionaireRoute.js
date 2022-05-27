@@ -10,6 +10,8 @@ router.get('/getquestions', Cuestionarios.getQuestions);
 
 router.get('/getanswers', Cuestionarios.getAnswers);
 
+router.get('/getanswer/:id', Cuestionarios.getAnswer);
+
 router.get('/getquestionnairesdetails/:id', Cuestionarios.getQuestionnairesDetails);
 
 router.get('/getrecententry/:id', Cuestionarios.getLatestEntry);
