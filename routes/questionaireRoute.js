@@ -26,11 +26,11 @@ router.get('/getcuestionarios', Cuestionarios.getCuestionarios);
 
 router.post('/uploadquestionnaire', Cuestionarios.uploadQuestionnaires);
 
+router.post('/uploadnewquestionnaire', Cuestionarios.uploadNewQuestionnaire);
+
 router.post('/edituploadedquestionnaire', Cuestionarios.editUploadedQuestionnaire);
 
 router.post('/deletequestionnaire/:id', Cuestionarios.borrarCuestionario);
-
-router.post('/uploadnewquestionnaire', Cuestionarios.uploadNewQuestionnaire);
 
 router.post('/establishnewkeys', Cuestionarios.establishKeys)
 

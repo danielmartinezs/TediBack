@@ -320,7 +320,7 @@ const establishKeys = async (req, res) => {
             else if(re.length !== 0){
                 for(let j = 0; j<re.length; j++){
                     if(re[j].idPregunta === idpregunta){
-                        dbconnect.query('INSERT INTO `pregunta-respuesta`(`idPregunta`, `idRespuesta`, `comentario`, `seleccionada`) VALUES (?,?,"","")', [re[j].idPregunta, idrespuesta], (err, resp) => {
+                        dbconnect.query('INSERT INTO `pregunta-respuesta`(`idPregunta`, `idRespuesta`) VALUES (?,?)', [re[j].idPregunta, idrespuesta], (err, resp) => {
                             if(err)
                                 console.log(err)
                         })
@@ -341,7 +341,7 @@ const establishKeys = async (req, res) => {
             else if(re.length !== 0){
                 for(let j = 0; j<re.length; j++){
                     if(re[j].idRespuesta === idrespuesta){
-                        dbconnect.query('INSERT INTO `pregunta-respuesta`(`idPregunta`, `idRespuesta`, `comentario`, `seleccionada`) VALUES (?,?,"","")', [idpregunta, re[j].idRespuesta], (err, resp) => {
+                        dbconnect.query('INSERT INTO `pregunta-respuesta`(`idPregunta`, `idRespuesta`) VALUES (?,?)', [idpregunta, re[j].idRespuesta], (err, resp) => {
                             if(err)
                                 console.log(err)
                         })
@@ -356,7 +356,7 @@ const establishKeys = async (req, res) => {
                 }
             }
         })
-        dbconnect.query('INSERT INTO `pregunta-respuesta`(idPregunta, idRespuesta, comentario, seleccionada) VALUES (?,?,"","")', [idpregunta, idrespuesta], (err, res) => {
+        dbconnect.query('INSERT INTO `pregunta-respuesta`(idPregunta, idRespuesta) VALUES (?,?)', [idpregunta, idrespuesta], (err, res) => {
             if(err)
                 console.log(err)
         })
