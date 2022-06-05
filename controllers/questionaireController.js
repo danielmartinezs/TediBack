@@ -48,8 +48,8 @@ const editQuestion = async (req, res) => {
 }
 
 const editAndCreateQuestion = async (req, res) => {
-    const { idc, idp, pregunta, tipo } = req.body;
-    if(!idc || !idp || !pregunta || !tipo){
+    const { idc, idp, idr, pregunta, tipo } = req.body;
+    if(!idc || !idp || !idr || !pregunta || !tipo){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
     dbconnect.query('SELECT MAX(idPregunta) AS id FROM preguntas', (error, response) => {//obtiene el id de la pregunta más reciente
@@ -61,11 +61,11 @@ const editAndCreateQuestion = async (req, res) => {
                 if(error)
                     console.log(error)
                 else{
-                    dbconnect.query('UPDATE `pregunta-respuesta` SET idPregunta = ? WHERE idPregunta = ?', [idpn, idp], (error, response) => {//actualiza el id de la pregunta en la tabla pregunta-respuesta
+                    dbconnect.query('INSERT INTO `pregunta-respuesta`(idPregunta, idRespuesta) VALUES (?,?)', [idpn, idr], (error, response) => {//actualiza el id de la pregunta en la tabla pregunta-respuesta
                         if(error)
                             console.log(error)
                         else{
-                            dbconnect.query('UPDATE `cuestionario-pregunta` SET idPregunta = ? WHERE idPregunta = ? AND idCuestionario = ?', [idpn, idp, idc], (error, response) => {//actualiza el id de la pregunta en la tabla cuestionario-pregunta
+                            dbconnect.query('UPDATE `cuestionario-pregunta` SET idPregunta = ? WHERE idPregunta = ? AND idRespuesta = ? AND idCuestionario = ?', [idpn, idp, idr, idc], (error, response) => {//actualiza el id de la pregunta en la tabla cuestionario-pregunta
                                 if(error)
                                     console.log(error)
                                 else{
