@@ -82,6 +82,30 @@ const editAndCreateQuestion = async (req, res) => {
 
 }
 
+const borraQuestion = async (req, res) => {
+    const { id } = req.params;
+    dbconnect.query('DELETE FROM preguntas WHERE idPregunta = ?', [id], (error, response) => {
+        if(error)
+            console.log(error)
+        else{
+            response.message = "Pregunta eliminada!";
+            dbconnect.query('SELECT idPregunta FROM preguntas', (erro, respose) => {
+                if(erro)
+                    console.log(erro)
+                else{
+                    for(let i = 1; i <= respose.length; i++){
+                        dbconnect.query('UPDATE preguntas SET idPregunta = ? WHERE idPregunta = ?', [i, respose[i-1].idPregunta], (err) => {
+                            if(err)
+                                console.log(err)
+                        })
+                    }
+                }
+            })
+            return res.status(200).json(response)
+        }
+    })
+}
+
 const addQuestion = async (req, res) => {
     const { idc, pregunta, tipo, respuesta } = req.body;
     console.log(idc)
@@ -255,6 +279,30 @@ const editAndCreateAnswers = async (req, res) => {
                 })
             }
         })
+        }
+    })
+}
+
+const borraAnswer = async (req, res) => {
+    const { id } = req.params;
+    dbconnect.query('DELETE FROM respuesta WHERE idRespuesta = ?', [id], (error, response) => {
+        if(error)
+            console.log(error)
+        else{
+            response.message = "Respuesta borrada!";
+            dbconnect.query('SELECT idRespuesta FROM respuesta', (erro, respose) => {
+                if(erro)
+                    console.log(erro)
+                else{
+                    for(let i = 1; i <= respose.length; i++){
+                        dbconnect.query('UPDATE respuesta SET idRespuesta = ? WHERE idRespuesta = ?', [i, respose[i-1].idRespuesta], (err) => {
+                            if(err)
+                                console.log(err)
+                        })
+                    }
+                }
+            })
+            return res.status(200).json(response)
         }
     })
 }
@@ -495,4 +543,4 @@ const checkLinkQuestion = async (req, res) => {
     })
 }
 
-module.exports = { ingresaCuestionario, ingresaPreguntaRespuesta, getQuestions, editQuestion, editAndCreateQuestion, addQuestion, getAnswers, getAnswer, editAllAnswers, editAndCreateAnswers, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, borrarCuestionario, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, establishKeys, establishKey, checkLinkAnswer, checkLinkQuestion }
+module.exports = { ingresaCuestionario, ingresaPreguntaRespuesta, getQuestions, editQuestion, editAndCreateQuestion, borraQuestion, addQuestion, getAnswers, getAnswer, editAllAnswers, editAndCreateAnswers, borraAnswer, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, borrarCuestionario, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, establishKeys, establishKey, checkLinkAnswer, checkLinkQuestion }

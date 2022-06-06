@@ -12,6 +12,8 @@ router.post('/editquestion', Cuestionarios.editQuestion);
 
 router.post('/editcreatequestion', Cuestionarios.editAndCreateQuestion);
 
+router.post('/borraquestion/:id', Cuestionarios.borraQuestion);
+
 router.post('/addquestion', Cuestionarios.addQuestion);
 
 router.get('/getanswers', Cuestionarios.getAnswers);
@@ -21,6 +23,8 @@ router.get('/getanswer/:id', Cuestionarios.getAnswer);
 router.post('/editanswer', Cuestionarios.editAllAnswers);
 
 router.post('/editcreateanswer', Cuestionarios.editAndCreateAnswers);
+
+router.post('/borraanswer/:id', Cuestionarios.borraAnswer);
 
 router.get('/getquestionnairesdetails/:id', Cuestionarios.getQuestionnairesDetails);
 

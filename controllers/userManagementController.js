@@ -280,13 +280,12 @@ const borraTutor = async (req, res) => {
 
 const borraAdmin = async (req, res) => {
     const { id } = req.params;
-    dbconnect.query('DELETE FROM admin WHERE idAdministrador = ?', [id], (error, response, fields) => {
+    dbconnect.query('DELETE FROM admin WHERE idAdministrador = ?', [id], (error, response) => {
     if(error)
         console.log(error)
     else{
-        console.log(id)
         response.message = "Administrador borrado exitosamente!"
-        dbconnect.query('SELECT idAdministrador FROM admin', (erro, resonse, fields) => {
+        dbconnect.query('SELECT idAdministrador FROM admin', (erro, resonse) => {
             if(erro)
                 console.log(erro)
             else{
