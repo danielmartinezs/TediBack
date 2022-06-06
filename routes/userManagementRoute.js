@@ -32,4 +32,6 @@ router.post('/editahito', userManager.editaHito);
 
 router.get('/gethitosa/:id', userManager.getHitosAlumno);
 
+router.get('/gethitosdisplaypadre/:id', userManager.getHitosDisplayPadre);
+
 module.exports = router;

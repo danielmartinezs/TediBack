@@ -387,8 +387,19 @@ const getHitosAlumno = async (req, res) => {
     })
 }
 
+const getHitosDisplayPadre = async (req, res) => {
+    const { id } = req.params;
+    dbconnect.query('SELECT hito.idHito,`alumno-hito`.fecha, hito.descripcion, alumno.idAlumno, alumno.nombre, tutor.idTutor FROM hito,`alumno-hito`,alumno, `tutor-alumno`, tutor WHERE hito.idHito = `alumno-hito`.`idHito` AND `alumno-hito`.`idAlumno` = alumno.idAlumno AND alumno.idAlumno = `tutor-alumno`.`idAlumno` AND `tutor-alumno`.`idTutor` = tutor.idTutor', (err, response) => {
+        if(err)
+            console.log(err)
+        else{
+            res.send(response);
+        }
+    })
+}
+
 function isPassValid(str) {
     return /^(?=.*[0-9])(?=.*[#"!/()=?¿¡{}_$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(str);
 }
 
-module.exports = { ingresaTutor, ingresaAdmin, getAdmins, getTutores, getAlumnos, getAlumno, editaAlumno, editaTutor, editaAdmin, borraTutor, borraAdmin, ingresaHito, borraHito, editaHito, getHitosAlumno }
+module.exports = { ingresaTutor, ingresaAdmin, getAdmins, getTutores, getAlumnos, getAlumno, editaAlumno, editaTutor, editaAdmin, borraTutor, borraAdmin, ingresaHito, borraHito, editaHito, getHitosAlumno, getHitosDisplayPadre }
