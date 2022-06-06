@@ -120,13 +120,11 @@ const addQuestion = async (req, res) => {
             console.log(er)
         else if(re.length !== 0){//si la pregunta ya existe
             let idp = re[0].idPregunta;//obtiene el id de la pregunta
-            console.log("ya existo en "+idp)
             dbconnect.query('SELECT idRespuesta FROM respuesta WHERE opciones = ?', [respuesta], (err, resp) => {//verifica si la respuesta ya existe
                 if(err)
                     console.log(err)
                 else if(resp.length !== 0){//si la respuesta ya existe
                     let idr = resp[0].idRespuesta;
-                    console.log("ya existo en "+idr)
                     dbconnect.query('SELECT idCuestionario FROM `cuestionario-pregunta` WHERE idPregunta = ? AND idRespuesta = ?', [idp, idr], (erro, respo) => {//verifica si la pregunta y respuesta ya existen en algún cuestionario
                         if(erro)
                             console.log(erro)
@@ -416,7 +414,6 @@ const uploadNewQuestionnaire = async (req, res) => {
                 dbconnect.query('INSERT INTO respuesta(idRespuesta, opciones) VALUES (?,?)', [idrespuesta, respuesta], (err, res) => {
                     if(err)
                         console.log(err)
-                     console.log("consulta de INSERT nueva respuesta")
                 })
             }
         })
@@ -430,7 +427,6 @@ const uploadNewQuestionnaire = async (req, res) => {
                 dbconnect.query('INSERT INTO preguntas(idPregunta, pregunta, tipo) VALUES (?,?,?)', [idpregunta, pregunta, tipop], (err, res) => {
                     if(err)
                         console.log(err)
-                        console.log("consulta de INSERT nueva pregunta")
                 })
             }
         })
