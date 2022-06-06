@@ -455,4 +455,44 @@ const establishKeys = async (req, res) => {
     return res.status(200)
 }
 
-module.exports = { ingresaCuestionario, ingresaPreguntaRespuesta, getQuestions, editQuestion, editAndCreateQuestion, addQuestion, getAnswers, getAnswer, editAllAnswers, editAndCreateAnswers, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, borrarCuestionario, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, establishKeys }
+const establishKey = async (req, res) => {
+
+}
+
+const checkLinkAnswer = async (req, res) => {
+    const { id } = req.params
+    if(!id){
+        return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
+    }
+    dbconnect.query('SELECT preguntas.pregunta, `cuestionario-pregunta`.`idCuestionario`, cuestionario.nombre  FROM `cuestionario-pregunta`, preguntas, cuestionario WHERE preguntas.idPregunta = `cuestionario-pregunta`.`idPregunta` AND `cuestionario-pregunta`.`idCuestionario` = cuestionario.idCuestionario AND idRespuesta = ?', [id], (error, response) => {
+        if(error)
+            console.log(error)
+        else if(response.length === 0){
+            response.message = "La respuesta actualmente no está asociada a ninguna pregunta"
+            res.send(response)
+        }
+        else{
+            res.send(response)
+        }
+    })
+}
+
+const checkLinkQuestion = async (req, res) => {
+    const { id } = req.params
+    if(!id){
+        return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
+    }
+    dbconnect.query('SELECT respuesta.opciones, `cuestionario-pregunta`.`idCuestionario`, cuestionario.nombre FROM `cuestionario-pregunta`, respuesta, cuestionario WHERE respuesta.idRespuesta = `cuestionario-pregunta`.`idRespuesta` AND `cuestionario-pregunta`.`idCuestionario` = cuestionario.idCuestionario AND idPregunta = ?', [id], (er, response) => {
+        if(er)
+            console.log(er)
+        else if(response.length === 0){
+            response.message = "La pregunta actualmente no está asociada a ninguna respuesta"
+            res.send(response)
+        }
+        else{
+            res.send(response)
+        }
+    })
+}
+
+module.exports = { ingresaCuestionario, ingresaPreguntaRespuesta, getQuestions, editQuestion, editAndCreateQuestion, addQuestion, getAnswers, getAnswer, editAllAnswers, editAndCreateAnswers, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, borrarCuestionario, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, establishKeys, establishKey, checkLinkAnswer, checkLinkQuestion }

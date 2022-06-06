@@ -38,4 +38,8 @@ router.post('/deletequestionnaire/:id', Cuestionarios.borrarCuestionario);
 
 router.post('/establishnewkeys', Cuestionarios.establishKeys)
 
+router.get('/checklinkanswer/:id', Cuestionarios.checkLinkAnswer);
+
+router.get('/checklinkquestion/:id', Cuestionarios.checkLinkQuestion);
+
 module.exports = router;
