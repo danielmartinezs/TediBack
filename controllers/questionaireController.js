@@ -108,107 +108,48 @@ const borraQuestion = async (req, res) => {
 
 const addQuestion = async (req, res) => {
     const { idc, pregunta, tipo, respuesta } = req.body;
-    console.log(idc)
-    console.log(pregunta)
-    console.log(tipo)
-    console.log(respuesta)
     if(!idc || !pregunta || !tipo || !respuesta){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
-    dbconnect.query('SELECT `idPregunta` FROM `preguntas` WHERE `pregunta` = ?', [pregunta], (er, re) => {//verifica si la pregunta ya existe
+    dbconnect.query('SELECT idPregunta FROM preguntas WHERE pregunta = ?', [pregunta], (er, re) => {
         if(er)
             console.log(er)
-        else if(re.length !== 0){//si la pregunta ya existe
-            let idp = re[0].idPregunta;//obtiene el id de la pregunta
-            dbconnect.query('SELECT idRespuesta FROM respuesta WHERE opciones = ?', [respuesta], (err, resp) => {//verifica si la respuesta ya existe
-                if(err)
-                    console.log(err)
-                else if(resp.length !== 0){//si la respuesta ya existe
-                    let idr = resp[0].idRespuesta;
-                    dbconnect.query('SELECT idCuestionario FROM `cuestionario-pregunta` WHERE idPregunta = ? AND idRespuesta = ?', [idp, idr], (erro, respo) => {//verifica si la pregunta y respuesta ya existen en algún cuestionario
-                        if(erro)
-                            console.log(erro)
-                        else if(respo.length !== 0){//si ya existe la pregunta y la respuesta
-                            for(let i = 0; i < respo.length; i++){//recorre el array de cuestionarios
-                                console.log(respo[i].idCuestionario)
-                                if(respo[i].idCuestionario == idc){//si el cuestionario ya existe
-                                return res.status(400).send({ success: false, message: 'La pregunta y la respuesta ya existen en este cuestionario y no se debe repetir'})
-                                }
-                            }
-                        }
-                        else{// si no existe la pregunta y la respuesta
-                            dbconnect.query('INSERT INTO `cuestionario-pregunta`(idCuestionario, idPregunta, idRespuesta) VALUES (?, ?, ?)', [idc, idp, idr], (err, response) => {//ingresa la pregunta y la respuesta al cuestionario
-                                if(err)
-                                    console.log(err)
-                                else{
-                                    response.message = "Pregunta agregada!";
-                                    return res.status(200).json(response)
-                                }
-                            })
-                        }
-                    })
-                }else{//si la respuesta no existe
-                    dbconnect.query('SELECT MAX(idRespuesta) FROM respuesta', (err, resp) => {//obtiene el id de la respuesta más reciente
-                        if(err)
-                            console.log(err)
-                        else{
-                            let idr = resp[0]['MAX(idRespuesta)']+1;//lo incrementa por uno
-                            dbconnect.query('INSERT INTO `respuesta`(`idRespuesta`, `opciones`) VALUES (?,?)', [idr, respuesta], (err, reso) => {
-                                if(err)
-                                    console.log(err)
-                                else{
-                                    return res.status(200).json;
-                                }
-                            })
-                        }
-                    })
-                }})
-        }else{//si la pregunta no existe
-            dbconnect.query('SELECT MAX(idPregunta) FROM preguntas', (err, res) => {//obtiene el id de la pregunta más reciente
-                if(err)
-                    console.log(err)
-                else{
-                    let idp = res[0]['MAX(idPregunta)']+1;//lo incrementa por uno
-                    dbconnect.query('INSERT INTO preguntas(idPregunta, pregunta, tipo) VALUES (?, ?, ?)', [idp, pregunta, tipo], (er, re) => {//inserta la nueva pregunta
-                        if(er)
-                            console.log(er)
-                        else{
-                            dbconnect.query('SELECT idRespuesta FROM respuesta WHERE opciones = ?', [respuesta], (err, res) => {
-                                if(err)
-                                    console.log(err)
-                                else if(res.length !== 0){
-                                    let idr = res[0].idRespuesta;
-                                    dbconnect.query('INSERT INTO respuesta(idRespuesta, opciones) VALUES (?,?)', [idr, respuesta], (err, res) => {
-                                        if(err)
-                                            console.log(err)
-                                        else{
-                                            return res.status(200).json;                                    
-                                        }
-                                    })
-                                }
-                                else{
-                                    dbconnect.query('SELECT MAX(idRespuesta) FROM respuesta', (err, res) => {
-                                        if(err)
-                                            console.log(err)
-                                        else{
-                                            let idr = res[0]['MAX(idRespuesta)']+1;
-                                            dbconnect.query('INSERT INTO `respuesta`(`idRespuesta`, `opciones`) VALUES (?,?)', [idr, respuesta], (err, res) => {
-                                                if(err)
-                                                    console.log(err)
-                                                else{
-                                                    return res.status(200).json;
-                                                }
-                                            })
-                                        }
-                                    })
-                                }
-                            })
-                        }
-                    })
-                }
-            })
+        else{
+            if(re.length === 0){
+                dbconnect.query('SELECT MAX(idPregunta) AS id FROM preguntas', (error, response) => {//obtiene el id de la pregunta más reciente
+                    if(error)
+                        console.log(error)
+                    else{
+                        let idpn = response[0].id + 1;//obtiene el id de la pregunta más reciente y le suma 1
+                        dbconnect.query('INSERT INTO preguntas(idPregunta, pregunta, tipo) VALUES (?, ?, ?)', [idpn, pregunta, tipo], (error, response) => {//inserta la nueva pregunta
+                            if(error)
+                                console.log(error)
+                        })
+                    }
+                })
+            }
         }
     })
+    dbconnect.query('SELECT idRespuesta FROM respuesta WHERE opciones = ?', [respuesta], (er, re) => {
+        if(er)
+            console.log(er)
+        else{
+            if(re.length === 0){
+                dbconnect.query('SELECT MAX(idRespuesta) AS id FROM respuesta', (error, response) => {//obtiene el id de la respuesta más reciente
+                    if(error)
+                        console.log(error)
+                    else{
+                        let idrn = response[0].id + 1;//obtiene el id de la respuesta más reciente y le suma 1
+                        dbconnect.query('INSERT INTO respuesta(idRespuesta, opciones) VALUES (?, ?)', [idrn, respuesta], (error, response) => {//inserta la nueva respuesta
+                            if(error)
+                                console.log(error)
+                        })
+                    }
+                })
+            }
+        }
+    })
+    res.status(200).send({ success: true, message: 'Pregunta agregada!'})
 }
 
 const getAnswers = async (req, res) => {
@@ -500,6 +441,42 @@ const establishKeys = async (req, res) => {
 }
 
 const establishKey = async (req, res) => {
+    const { idc, pregunta, tipo, respuesta } = req.body
+    if(!idc || !pregunta, !tipo || !respuesta){
+        return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
+    }
+    console.log(idc);
+    console.log(pregunta);
+    console.log(tipo);
+    console.log(respuesta);
+    dbconnect.query('SELECT idPregunta FROM preguntas WHERE pregunta = ?', [pregunta], (er, re) => {
+        if(er)
+            console.log(er)
+        else{
+            let idpregunta = re[0].idPregunta;
+            dbconnect.query('SELECT idRespuesta FROM respuesta WHERE opciones = ?', [respuesta], (err, res) => {
+                if(err)
+                    console.log(err)
+                else{
+                    let idrespuesta = res[0].idRespuesta;
+                    dbconnect.query('INSERT INTO `pregunta-respuesta`(idPregunta, idRespuesta) VALUES (?,?)', [idpregunta, idrespuesta], (err, resp) => {
+                        if(err)
+                            console.log(err)
+                        else{
+                            dbconnect.query('INSERT INTO `cuestionario-pregunta`(idCuestionario, idPregunta, idRespuesta) VALUES (?,?,?)', [idc, idpregunta, idrespuesta], (error, response) => {
+                                if(error)
+                                    console.log(error)
+                                else{
+                                    response.message = "Se ha ingresado una nueva pregunta"
+                                    return res.status(200).json(response)
+                                }
+                            })
+                        }
+                    }
+                )}
+            })
+        }
+    })
 
 }
 

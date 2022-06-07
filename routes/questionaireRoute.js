@@ -40,7 +40,9 @@ router.post('/edituploadedquestionnaire', Cuestionarios.editUploadedQuestionnair
 
 router.post('/deletequestionnaire/:id', Cuestionarios.borrarCuestionario);
 
-router.post('/establishnewkeys', Cuestionarios.establishKeys)
+router.post('/establishnewkeys', Cuestionarios.establishKeys);
+
+router.post('/establishnewkey', Cuestionarios.establishKey);
 
 router.get('/checklinkanswer/:id', Cuestionarios.checkLinkAnswer);
 
