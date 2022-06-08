@@ -454,17 +454,9 @@ const establishKeys = async (req, res) => {
 
 const establishKey = async (req, res) => {
     const { idc, pregunta, tipo, respuesta } = req.body
-    console.log(idc)
-    console.log(pregunta)
-    console.log(tipo)
-    console.log(respuesta)
     if(!idc || !pregunta, !tipo || !respuesta){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
-    console.log(idc);
-    console.log(pregunta);
-    console.log(tipo);
-    console.log(respuesta);
     dbconnect.query('SELECT idPregunta FROM preguntas WHERE pregunta = ?', [pregunta], (er, re) => {
         if(er)
             console.log(er)
