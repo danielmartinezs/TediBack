@@ -299,12 +299,24 @@ const editUploadedQuestionnaire = async (req, res) => {
 
 const borrarCuestionario = async (req, res) => {
     const { id } = req.params;
-    dbconnect.query('DELETE FROM `cuestionario` WHERE idCuestionario = ?', [id], (error, response) => {
+    dbconnect.query('DELETE FROM `cuestionario-pregunta` WHERE idCuestionario = ?', [id], (error, response) => {
         if(error)
             console.log(error)
         else{
-            response.message = "Cuestionario borrado!";
-            return res.status(200).json(response)
+            dbconnect.query('DELETE FROM `cuestionario-alumno` WHERE idCuestionario = ?', [id], (error, response) => {
+                if(error)
+                    console.log(error)
+                else{
+                    dbconnect.query('DELETE FROM `cuestionario` WHERE idCuestionario = ?', [id], (error, response) => {
+                        if(error)
+                            console.log(error)
+                        else{
+                        response.message = "Cuestionario borrado!";
+                        return res.status(200).json(response)
+                        }
+                    })
+                }
+            })
         }
     })
 }
@@ -442,6 +454,10 @@ const establishKeys = async (req, res) => {
 
 const establishKey = async (req, res) => {
     const { idc, pregunta, tipo, respuesta } = req.body
+    console.log(idc)
+    console.log(pregunta)
+    console.log(tipo)
+    console.log(respuesta)
     if(!idc || !pregunta, !tipo || !respuesta){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
@@ -468,7 +484,6 @@ const establishKey = async (req, res) => {
                                     console.log(error)
                                 else{
                                     response.message = "Se ha ingresado una nueva pregunta"
-                                    return res.status(200).json(response)
                                 }
                             })
                         }
@@ -477,7 +492,7 @@ const establishKey = async (req, res) => {
             })
         }
     })
-
+    return res.status(200)
 }
 
 const checkLinkAnswer = async (req, res) => {
