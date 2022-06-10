@@ -1,14 +1,17 @@
-const pdf = require('pdfkit');
+const PDF = require('pdfkit');
+const PDFC = require('pdfkit-construct');
 const express = require('express');
 const dbconnect = require('../config/dbConnection.js');
 const PDFService = require('../services/pdf-service');
-const { path } = require('pdfkit');
+const path = require('path');
+const fs = require('fs');
+const { dirname } = require('path');
 
 const descargaReporte = (req, res) => {
 
     const stream = res.writeHead(200, {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': 'attachment;filename=invoice.pdf'
+        'Content-Disposition': 'attachment; filename=invoice.pdf'
     });
 
     PDFService.generaReporte(
@@ -18,18 +21,14 @@ const descargaReporte = (req, res) => {
 }
 
 const holaMundo = (req, res) => {
+    
     const doc = new PDF({bufferPage: true});
-    const filename = `HolaMundo`;
-    const stream = res.writeHead(200, {
-        'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment;filename=${filename}`
-    });
-    doc.on('data', (data) => {stream.write(data)});
-    doc.on('end', () => {stream.end()});
-
+    const filename = `HolaMundo${Date.now()}.pdf`;
     doc.text('HOLA MUNDO CON PDFKIT', 30, 30);
-    doc.pipe( res );
+    doc.pipe( fs.createWriteStream(`./pdfs/${filename}`));
     doc.end()
+    const dir = path.join(__dirname, `../pdfs/${filename}`);
+    return res.send(dir);
 }
 
 const crearReporteHabilidades = (req, res) => {
