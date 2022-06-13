@@ -38,8 +38,9 @@ const reporteHabilidadesPreVerbales = (req, res) => {
 }
 
 const reportePrueba = (req, res) => {
-    PDFService.doc5();
-    const dir = path.join(__dirname, `../pdfs/document5.pdf`);
+    const filename = `ReportePrueba.pdf`;
+    PDFService.reportePrueba(filename);
+    const dir = path.join(__dirname, `../pdfs/${filename}`);
     return res.send(dir);
 }
 
