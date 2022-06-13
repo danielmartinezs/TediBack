@@ -24,4 +24,15 @@ const getDatosGraphAdmin = async (req, res) => {
     })
 }
 
-module.exports = { getDatosGraphPadre, getDatosGraphAdmin }
+const getDatosGraphAdminNoN = async (req, res) => {
+    const { id } = req.params;
+    dbconnect.query('SELECT fecha, puntaje FROM `cuestionario-alumno` WHERE puntaje IS NOT NULL AND idAlumno = ?', [id], (err, respo) => {
+        if(err)
+            console.log(err)
+        else{
+            return res.status(200).json(respo)
+        }
+    })
+}
+
+module.exports = { getDatosGraphPadre, getDatosGraphAdmin, getDatosGraphAdminNoN }
