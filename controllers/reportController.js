@@ -42,7 +42,7 @@ const reportePrueba = (req, res) => {
     if(!timestamp) {
         return res.status(400).send('Falta el timestamp');
     }
-    dbconnect.query('SELECT respuestas, comentarios, fecha, puntaje FROM `cuestionario-alumno` WHERE fecha = ?', [timestamp], (err, results) => {
+    dbconnect.query('SELECT `cuestionario-alumno`.respuestas, `cuestionario-alumno`.comentarios, `cuestionario-alumno`.fecha, `cuestionario-alumno`.puntaje, alumno.nombre, cuestionario.nombre AS titulo, cuestionario.materia FROM `cuestionario-alumno`, alumno, cuestionario WHERE `cuestionario-alumno`.`idAlumno` = alumno.idAlumno AND `cuestionario-alumno`.`idCuestionario`= cuestionario.idCuestionario AND fecha = ?', [timestamp], (err, results) => {
         if(err) {
             console.log(err);
         }

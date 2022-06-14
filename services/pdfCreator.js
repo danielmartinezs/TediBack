@@ -51,19 +51,19 @@ function reportePrueba (filename, data) {
 
     var answerkey = JSON.parse(respuestas);
 
-    console.log(answerkey);
+    //console.log(answerkey);
 
     let puntaje = data.puntaje;
 
     var scores = JSON.parse(puntaje);
 
-    console.log(scores);
+    //console.log(scores);
 
     let comentarios = data.comentarios;
 
     var comments = JSON.parse(comentarios);
 
-    console.log(comments);
+    //console.log(comments);
 
     let table = {
         // headers are automatically repeated if the table spans over multiple pages
@@ -165,7 +165,7 @@ function reportePrueba (filename, data) {
 
     let tablew = {
         headerRows: 2,
-        widths: ['*', 'auto', 120, 60, 50, 60, 50],
+        //widths: ['*', 'auto', 100, '*'],
         body: [
             [
                 {
@@ -212,6 +212,18 @@ function reportePrueba (filename, data) {
             },
             {
                 text: "Comentarios: "+comentarios,
+                style: 'subheader',
+            },
+            {
+                text: "Alumno: "+data.nombre,
+                style: 'subheader',
+            },
+            {
+                text: "Cuestionario: "+data.titulo,
+                style: 'subheader',
+            },
+            {
+                text: "Materia: "+data.materia,
                 style: 'subheader',
             },
             {
