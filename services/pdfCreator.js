@@ -33,7 +33,7 @@ function generaReporte (filename) {
     doc.end()
 }
 
-function reportePrueba (filename) {
+function reportePrueba (filename, data) {
     var fonts = {
         Roboto: {
             normal: ('./services/fonts/roboto/Roboto-Regular.ttf'),
@@ -44,6 +44,12 @@ function reportePrueba (filename) {
     };
 
     let pdfmake = new pdfm(fonts);
+    
+    let fecha = data.fecha;
+
+    let respuestas = data.respuestas;
+
+    let comentarios = data.comentarios;
 
     let table = {
         // headers are automatically repeated if the table spans over multiple pages
@@ -146,6 +152,18 @@ function reportePrueba (filename) {
             {
                 text: "Prueba Table",
                 style: 'header',
+            },
+            {
+                text: "Fecha: " + new Date(fecha).toLocaleDateString(),
+                style: 'subheader',
+            },
+            {
+                text: "Respuestas: "+respuestas,
+                style: 'subheader',
+            },
+            {
+                text: "Comentarios: "+comentarios,
+                style: 'subheader',
             },
             {
             //"PruebaTable",
