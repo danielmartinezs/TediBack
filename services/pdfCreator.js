@@ -49,7 +49,21 @@ function reportePrueba (filename, data) {
 
     let respuestas = data.respuestas;
 
+    var answerkey = JSON.parse(respuestas);
+
+    console.log(answerkey);
+
+    let puntaje = data.puntaje;
+
+    var scores = JSON.parse(puntaje);
+
+    console.log(scores);
+
     let comentarios = data.comentarios;
+
+    var comments = JSON.parse(comentarios);
+
+    console.log(comments);
 
     let table = {
         // headers are automatically repeated if the table spans over multiple pages
@@ -80,7 +94,9 @@ function reportePrueba (filename, data) {
                     alignment: 'center',
                     colSpan: 4
                 }, 
-                {}, {}, {}
+                {},
+                {},
+                {}
             ],
             [
                 {},
@@ -147,6 +163,39 @@ function reportePrueba (filename, data) {
         ]
     }
 
+    let tablew = {
+        headerRows: 2,
+        widths: ['*', 'auto', 120, 60, 50, 60, 50],
+        body: [
+            [
+                {
+                    text: 'Respuesta',
+                    style: 'tableHeader',
+                },
+                {
+                    text: 'Comentario',
+                    style: 'tableHeader',
+                },
+            ],
+            [
+                ''+answerkey[0].value,
+                ''+comments[0].comment,
+            ],
+            [
+                ''+answerkey[1].value,
+                ''+comments[1].comment,
+            ],
+            [
+                ''+answerkey[2].value,
+                ''+comments[2].comment,
+            ],
+            [
+                ''+answerkey[3].value,
+                ''+comments[3].comment,
+            ],
+        ]
+    }
+
     let docDefination = {
         content: [
             {
@@ -166,8 +215,12 @@ function reportePrueba (filename, data) {
                 style: 'subheader',
             },
             {
+                text: "Puntaje: "+puntaje,
+                style: 'subheader',
+            },
+            {
             //"PruebaTable",
-                table: table
+                table: tablew
             }
         ]
     }

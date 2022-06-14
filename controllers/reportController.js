@@ -42,7 +42,7 @@ const reportePrueba = (req, res) => {
     if(!timestamp) {
         return res.status(400).send('Falta el timestamp');
     }
-    dbconnect.query('SELECT respuestas, comentarios, fecha FROM `cuestionario-alumno` WHERE fecha = ?', [timestamp], (err, results) => {
+    dbconnect.query('SELECT respuestas, comentarios, fecha, puntaje FROM `cuestionario-alumno` WHERE fecha = ?', [timestamp], (err, results) => {
         if(err) {
             console.log(err);
         }
