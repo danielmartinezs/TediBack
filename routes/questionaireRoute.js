@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Cuestionarios = require('../controllers/questionaireController.js');
 
-router.post('/newquestionaire', Cuestionarios.ingresaCuestionario);
+router.post('/editquestionairename', Cuestionarios.editarNombreCuestionario);
 
 router.post('/newansweredquestion', Cuestionarios.ingresaPreguntaRespuesta);
 

@@ -3,8 +3,19 @@ const express = require('express');
 const dbconnect = require('../config/dbConnection.js');
 var mysql = require('mysql');
 
-const ingresaCuestionario = async (req, res) => {
-    const { nombreCues,  } = req.body;
+const editarNombreCuestionario = async (req, res) => {
+    const { id, nombre } = req.body;
+    if(!id || !nombre){
+        return res.status(400).json({ success: false, message: 'No se ha recibido el id del cuestionario'})
+    }
+    dbconnect.query('UPDATE cuestionario SET nombre = ? WHERE idCuestionario = ?', [nombre, id], (error, response) => {
+        if(error)
+            console.log(error)
+        else{
+            response.message = "El nombre del cuestionario ha sido editado!";
+            return res.status(200).json(response);
+        }
+    })
 }
 
 const ingresaPreguntaRespuesta = async (req, res) => {
@@ -523,4 +534,4 @@ const checkLinkQuestion = async (req, res) => {
     })
 }
 
-module.exports = { ingresaCuestionario, ingresaPreguntaRespuesta, getQuestions, editQuestion, editAndCreateQuestion, borraQuestion, addQuestion, getAnswers, getAnswer, editAllAnswers, editAndCreateAnswers, borraAnswer, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, borrarCuestionario, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, establishKeys, establishKey, checkLinkAnswer, checkLinkQuestion }
+module.exports = { editarNombreCuestionario, ingresaPreguntaRespuesta, getQuestions, editQuestion, editAndCreateQuestion, borraQuestion, addQuestion, getAnswers, getAnswer, editAllAnswers, editAndCreateAnswers, borraAnswer, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, borrarCuestionario, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, establishKeys, establishKey, checkLinkAnswer, checkLinkQuestion }
