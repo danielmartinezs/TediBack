@@ -516,6 +516,16 @@ const checkLinkAnswer = async (req, res) => {
     })
 }
 
+const checkLinkAnswers = async (req, res) => {
+    dbconnect.query('SELECT DISTINCT(idRespuesta) FROM `cuestionario-pregunta`', (error, response) => {
+        if(error)
+            console.log(error)
+        else{
+            res.send(response);
+        }
+    })
+}
+
 const checkLinkQuestion = async (req, res) => {
     const { id } = req.params
     if(!id){
@@ -534,4 +544,14 @@ const checkLinkQuestion = async (req, res) => {
     })
 }
 
-module.exports = { editarNombreCuestionario, ingresaPreguntaRespuesta, getQuestions, editQuestion, editAndCreateQuestion, borraQuestion, addQuestion, getAnswers, getAnswer, editAllAnswers, editAndCreateAnswers, borraAnswer, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, borrarCuestionario, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, establishKeys, establishKey, checkLinkAnswer, checkLinkQuestion }
+const checkLinkQuestions = async (req, res) => {
+    dbconnect.query('SELECT DISTINCT(idPregunta) FROM `cuestionario-pregunta`', (error, response) => {
+        if(error)
+            console.log(error)
+        else{
+            res.send(response);
+        }
+    })
+}
+
+module.exports = { editarNombreCuestionario, ingresaPreguntaRespuesta, getQuestions, editQuestion, editAndCreateQuestion, borraQuestion, addQuestion, getAnswers, getAnswer, editAllAnswers, editAndCreateAnswers, borraAnswer, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, borrarCuestionario, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, establishKeys, establishKey, checkLinkAnswer, checkLinkAnswers, checkLinkQuestion, checkLinkQuestions }

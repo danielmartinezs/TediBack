@@ -44,7 +44,11 @@ router.post('/establishnewkeys', Cuestionarios.establishKeys);
 
 router.post('/establishnewkey', Cuestionarios.establishKey);
 
+router.get('/checklinkanswers', Cuestionarios.checkLinkAnswers);
+
 router.get('/checklinkanswer/:id', Cuestionarios.checkLinkAnswer);
+
+router.get('/checklinkquestions', Cuestionarios.checkLinkQuestions);
 
 router.get('/checklinkquestion/:id', Cuestionarios.checkLinkQuestion);
 
