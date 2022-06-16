@@ -308,7 +308,6 @@ const borraHito = async (req, res) => {
     if(error)
         console.log(error)
     else{
-        console.log(id)
         response.message = "Hito borrado exitosamente!"
         dbconnect.query('SELECT idHito FROM hito', (erro, resonse) => {
             if(erro)
