@@ -26,6 +26,8 @@ router.post('/editcreateanswer', Cuestionarios.editAndCreateAnswers);
 
 router.post('/borraanswer/:id', Cuestionarios.borraAnswer);
 
+router.post('/deleteqa', Cuestionarios.deleteQA);
+
 router.get('/getquestionnairesdetails/:id', Cuestionarios.getQuestionnairesDetails);
 
 router.get('/getrecententry/:id', Cuestionarios.getLatestEntry);

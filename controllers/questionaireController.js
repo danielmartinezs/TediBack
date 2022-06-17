@@ -257,6 +257,22 @@ const borraAnswer = async (req, res) => {
     })
 }
 
+const deleteQA = async (req, res) => {
+    const { idc, idp, idr } = req.body;
+    if(!idc || !idp || !idr){
+        return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
+    }
+    dbconnect.query('DELETE FROM `cuestionario-pregunta` WHERE idCuestionario = ? AND idPregunta = ? AND idRespuesta = ?', [idc, idp, idr], (error, response) => {
+        if(error)
+            console.log(error)
+        else{
+            response.message = "La pregunta ha sido borrada del cuestionario!";
+            return res.status(200).json(response)
+            }
+        }
+    )
+}
+
 const getCuestionarios = async (req, res) => {
     dbconnect.query('SELECT idCuestionario, nombre, materia FROM cuestionario', (error, response) => {
         if(error)
@@ -554,4 +570,4 @@ const checkLinkQuestions = async (req, res) => {
     })
 }
 
-module.exports = { editarNombreCuestionario, ingresaPreguntaRespuesta, getQuestions, editQuestion, editAndCreateQuestion, borraQuestion, addQuestion, getAnswers, getAnswer, editAllAnswers, editAndCreateAnswers, borraAnswer, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, borrarCuestionario, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, establishKeys, establishKey, checkLinkAnswer, checkLinkAnswers, checkLinkQuestion, checkLinkQuestions }
+module.exports = { editarNombreCuestionario, ingresaPreguntaRespuesta, getQuestions, editQuestion, editAndCreateQuestion, borraQuestion, addQuestion, getAnswers, getAnswer, editAllAnswers, editAndCreateAnswers, borraAnswer, deleteQA, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, borrarCuestionario, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, establishKeys, establishKey, checkLinkAnswer, checkLinkAnswers, checkLinkQuestion, checkLinkQuestions }
