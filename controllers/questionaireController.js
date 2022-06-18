@@ -514,14 +514,14 @@ const establishKey = async (req, res) => {
     return res.status(200)
 }
 
-const checkLinkAnswer = async (req, res) => {
+const checkLinkAnswer = async (req, res) => {//Saber si la pregunta está vinculada a una respuesta
     const { id } = req.params
     if(!id){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
-    dbconnect.query('SELECT preguntas.pregunta, `cuestionario-pregunta`.`idCuestionario`, cuestionario.nombre  FROM `cuestionario-pregunta`, preguntas, cuestionario WHERE preguntas.idPregunta = `cuestionario-pregunta`.`idPregunta` AND `cuestionario-pregunta`.`idCuestionario` = cuestionario.idCuestionario AND idRespuesta = ?', [id], (error, response) => {
-        if(error)
-            console.log(error)
+    dbconnect.query('SELECT `pregunta-respuesta`.`idPregunta`, preguntas.pregunta FROM `pregunta-respuesta` INNER JOIN preguntas ON preguntas.idPregunta = `pregunta-respuesta`.`idPregunta` WHERE `pregunta-respuesta`.`idRespuesta` = ?', [id], (er, response) => {
+        if(er)
+            console.log(er)
         else if(response.length === 0){
             response.message = "La respuesta actualmente no está asociada a ninguna pregunta"
             res.send(response)
@@ -532,7 +532,25 @@ const checkLinkAnswer = async (req, res) => {
     })
 }
 
-const checkLinkAnswers = async (req, res) => {
+const whereAnswerLink = async (req, res) => {//Identificar el cuestionario en donde se encuentra la pregunta-respuesta
+    const { idp, idr } = req.params
+    if(!idp || !idr){
+        return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
+    }
+    dbconnect.query('SELECT idCuestionario FROM `cuestionario-pregunta` WHERE idPregunta = ? AND idRespuesta = ?', [idp, idr], (er, response) => {
+        if(er)
+            console.log(er)
+        else if(response.length === 0){
+            response.message = "La respuesta actualmente no está asociada a ninguna pregunta"
+            res.send(response)
+        }
+        else{
+            res.send(response)
+        }
+    })
+}
+
+const answersInUse = async (req, res) => {//Mostrar visualmente las respuestas que están siendo usadas en un cuestionario
     dbconnect.query('SELECT DISTINCT(idRespuesta) FROM `cuestionario-pregunta`', (error, response) => {
         if(error)
             console.log(error)
@@ -542,12 +560,12 @@ const checkLinkAnswers = async (req, res) => {
     })
 }
 
-const checkLinkQuestion = async (req, res) => {
+const checkLinkQuestion = async (req, res) => {//Saber si la pregunta está vinculada a una respuesta
     const { id } = req.params
     if(!id){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
-    dbconnect.query('SELECT respuesta.opciones, `cuestionario-pregunta`.`idCuestionario`, cuestionario.nombre FROM `cuestionario-pregunta`, respuesta, cuestionario WHERE respuesta.idRespuesta = `cuestionario-pregunta`.`idRespuesta` AND `cuestionario-pregunta`.`idCuestionario` = cuestionario.idCuestionario AND idPregunta = ?', [id], (er, response) => {
+    dbconnect.query('SELECT idRespuesta FROM `pregunta-respuesta` WHERE idPregunta = ?', [id], (er, response) => {
         if(er)
             console.log(er)
         else if(response.length === 0){
@@ -560,7 +578,25 @@ const checkLinkQuestion = async (req, res) => {
     })
 }
 
-const checkLinkQuestions = async (req, res) => {
+const whereQuestionLink = async (req, res) => {//Identificar el cuestionario en donde se encuentra la pregunta-respuesta
+    const { idr, idp } = req.params
+    if(!idr || !idp){
+        return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
+    }
+    dbconnect.query('SELECT idCuestionario FROM `cuestionario-pregunta` WHERE idPregunta = ? AND idRespuesta = ?', [idp, idr], (er, response) => {
+        if(er)
+            console.log(er)
+        else if(response.length === 0){
+            response.message = "La pregunta actualmente no está asociada a ninguna respuesta"
+            res.send(response)
+        }
+        else{
+            res.send(response)
+        }
+    })
+}
+
+const questionsInUse = async (req, res) => {//Mostrar visualmente las preguntas que están siendo usadas en un cuestionario
     dbconnect.query('SELECT DISTINCT(idPregunta) FROM `cuestionario-pregunta`', (error, response) => {
         if(error)
             console.log(error)
@@ -570,4 +606,4 @@ const checkLinkQuestions = async (req, res) => {
     })
 }
 
-module.exports = { editarNombreCuestionario, ingresaPreguntaRespuesta, getQuestions, editQuestion, editAndCreateQuestion, borraQuestion, addQuestion, getAnswers, getAnswer, editAllAnswers, editAndCreateAnswers, borraAnswer, deleteQA, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, borrarCuestionario, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, establishKeys, establishKey, checkLinkAnswer, checkLinkAnswers, checkLinkQuestion, checkLinkQuestions }
+module.exports = { editarNombreCuestionario, ingresaPreguntaRespuesta, getQuestions, editQuestion, editAndCreateQuestion, borraQuestion, addQuestion, getAnswers, getAnswer, editAllAnswers, editAndCreateAnswers, borraAnswer, deleteQA, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, borrarCuestionario, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, establishKeys, establishKey, checkLinkAnswer, whereAnswerLink, answersInUse, checkLinkQuestion, whereQuestionLink, questionsInUse }

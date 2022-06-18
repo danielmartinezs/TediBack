@@ -46,12 +46,16 @@ router.post('/establishnewkeys', Cuestionarios.establishKeys);
 
 router.post('/establishnewkey', Cuestionarios.establishKey);
 
-router.get('/checklinkanswers', Cuestionarios.checkLinkAnswers);
+router.get('/whereanswerlink/:idp/:idr', Cuestionarios.whereAnswerLink);
 
 router.get('/checklinkanswer/:id', Cuestionarios.checkLinkAnswer);
 
-router.get('/checklinkquestions', Cuestionarios.checkLinkQuestions);
+router.get('/answersused', Cuestionarios.answersInUse);
+
+router.get('/wherequestionlink/:idr/:idp', Cuestionarios.whereQuestionLink);
 
 router.get('/checklinkquestion/:id', Cuestionarios.checkLinkQuestion);
+
+router.get('/questionsused', Cuestionarios.questionsInUse);
 
 module.exports = router;
