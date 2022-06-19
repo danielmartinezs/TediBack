@@ -414,6 +414,20 @@ const uploadNewQuestionnaire = async (req, res) => {
     res.status(200).send({message: "Registros subidos!"})
 }
 
+const vincularQA = async (req, res) => {
+    const { idc, idp, idr } = req.body
+    if(!idc || !idp || !idr){
+        return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
+    }
+    dbconnect.query('INSERT INTO `cuestionario-pregunta`(idCuestionario, idPregunta, idRespuesta) VALUES (?, ?, ?)', [idc, idp, idr], (er, re) => {
+        if(er)
+            console.log(er)
+        else{
+            res.status(200).send({message: "Registros vinculados exitosamente!"})
+        }
+    })
+}
+
 const establishKeys = async (req, res) => {
     const { idc, qa } = req.body
     if(!idc || !qa){
@@ -606,4 +620,4 @@ const questionsInUse = async (req, res) => {//Mostrar visualmente las preguntas 
     })
 }
 
-module.exports = { editarNombreCuestionario, ingresaPreguntaRespuesta, getQuestions, editQuestion, editAndCreateQuestion, borraQuestion, addQuestion, getAnswers, getAnswer, editAllAnswers, editAndCreateAnswers, borraAnswer, deleteQA, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, borrarCuestionario, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, establishKeys, establishKey, checkLinkAnswer, whereAnswerLink, answersInUse, checkLinkQuestion, whereQuestionLink, questionsInUse }
+module.exports = { editarNombreCuestionario, ingresaPreguntaRespuesta, getQuestions, editQuestion, editAndCreateQuestion, borraQuestion, addQuestion, getAnswers, getAnswer, editAllAnswers, editAndCreateAnswers, borraAnswer, deleteQA, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, borrarCuestionario, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, vincularQA, establishKeys, establishKey, checkLinkAnswer, whereAnswerLink, answersInUse, checkLinkQuestion, whereQuestionLink, questionsInUse }

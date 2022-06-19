@@ -42,6 +42,8 @@ router.post('/edituploadedquestionnaire', Cuestionarios.editUploadedQuestionnair
 
 router.post('/deletequestionnaire/:id', Cuestionarios.borrarCuestionario);
 
+router.post('/vincularqa', Cuestionarios.vincularQA);
+
 router.post('/establishnewkeys', Cuestionarios.establishKeys);
 
 router.post('/establishnewkey', Cuestionarios.establishKey);
