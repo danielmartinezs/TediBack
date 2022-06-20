@@ -19,16 +19,25 @@ const editarNombreCuestionario = async (req, res) => {
 }
 
 const ingresaPreguntaRespuesta = async (req, res) => {
-    const { idp, idr, comment, answer } = req.body;
-    if(!idp || !idr || !comment || !answer){
+    const { idp, idr } = req.body;
+    if(!idp || !idr){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
-    dbconnect.query('INSERT INTO `pregunta-respuesta`(idPregunta, idRespuesta, comentario, seleccionada) VALUES (?, ?, ?, ?)', [idp, idr, comment, answer], (err, response, fields) => {
-        if(err)
-            console.log(err)
-        else{
-            response.message = "Se ha ingresado una nueva pregunta!"
-            return res.status(200).json(response)
+    dbconnect.query('SELECT idRespuesta, idPregunta FROM `pregunta-respuesta` WHERE idPregunta = ? AND idRespuesta = ?', [idp, idr], (error, response) => {
+        if(error)
+            console.log(error)
+        else if(response.length > 0){
+            return res.status(400).send({ success: false, message: 'Este combo pregunta y respuesta ya existe'})
+        }
+        else if(response.length === 0){
+            dbconnect.query('INSERT INTO `pregunta-respuesta`(idPregunta, idRespuesta) VALUES (?, ?)', [idp, idr], (err, response) => {
+                if(err)
+                    console.log(err)
+                else{
+                    response.message = "Se ha ingresado una nueva pregunta!"
+                    return res.status(200).json(response)
+                }
+            })
         }
     })
 }
