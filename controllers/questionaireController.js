@@ -423,7 +423,8 @@ const vincularQA = async (req, res) => {
         if(er)
             console.log(er)
         else{
-            res.status(200).send({message: "Registros vinculados exitosamente!"})
+            re.message = "Registros vinculados exitosamente!";
+            return res.status(200).json(re)
         }
     })
 }
