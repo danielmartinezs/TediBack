@@ -36,4 +36,6 @@ router.get('/gethitosa/:id', userManager.getHitosAlumno);
 
 router.get('/gethitosdisplaypadre/:id', userManager.getHitosDisplayPadre);
 
+router.get('/getalumnosgrupo/:id', userManager.getAlumnosGrupo);
+
 module.exports = router;

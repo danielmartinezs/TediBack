@@ -419,8 +419,22 @@ const getHitosDisplayPadre = async (req, res) => {
     })
 }
 
+const getAlumnosGrupo = async (req, res) => {
+    const { id } = req.params;
+    if(!id){
+        return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
+    }
+    dbconnect.query('SELECT alumno.idAlumno, alumno.nombre FROM `alumno-grupo`, alumno WHERE `alumno-grupo`.`idAlumno` =  alumno.idAlumno AND `alumno-grupo`.`idGrupo` = ?', [id], (error, response) => {
+        if(error)
+            console.log(error)
+        else{
+            res.send(response);
+        }
+    })
+}
+
 function isPassValid(str) {
     return /^(?=.*[0-9])(?=.*[#"!/()=?¿¡{}_$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(str);
 }
 
-module.exports = { ingresaTutor, ingresaAdmin, getGrupos, getAdmins, getTutores, getAlumnos, getAlumno, editaAlumno, editaTutor, editaAdmin, borraTutor, borraAdmin, ingresaHito, borraHito, editaHito, getHitosAlumno, getHitosDisplayPadre }
+module.exports = { ingresaTutor, ingresaAdmin, getGrupos, getAdmins, getTutores, getAlumnos, getAlumno, editaAlumno, editaTutor, editaAdmin, borraTutor, borraAdmin, ingresaHito, borraHito, editaHito, getHitosAlumno, getHitosDisplayPadre, getAlumnosGrupo }
