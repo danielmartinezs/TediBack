@@ -4,6 +4,10 @@ const Cuestionarios = require('../controllers/questionaireController.js');
 
 router.post('/editquestionairename', Cuestionarios.editarNombreCuestionario);
 
+router.get('/getmaterias', Cuestionarios.getMaterias);
+
+router.post('/editmateria', Cuestionarios.editarMateriaCuestionario);
+
 router.post('/newanswerquestion', Cuestionarios.ingresaPreguntaRespuesta);
 
 router.get('/getquestions', Cuestionarios.getQuestions);
