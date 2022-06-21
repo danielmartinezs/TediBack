@@ -6,6 +6,8 @@ router.post('/newtutor', userManager.ingresaTutor);
 
 router.post('/newadmin', userManager.ingresaAdmin);
 
+router.get('/getgrupos', userManager.getGrupos);
+
 router.get('/getadmins', userManager.getAdmins);
 
 router.get('/getalumnos', userManager.getAlumnos);

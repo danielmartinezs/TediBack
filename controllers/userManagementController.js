@@ -5,8 +5,8 @@ const { application, response } = require('express');
 const salty = 10;
 
 const ingresaTutor = async (req, res) => {
-    const { nombretut, password, confpassword, nombrealu, apellidoalu, nacimiento, schoolmester, foto } = req.body;
-    if(!nombretut || !password || !confpassword || !nombrealu || !apellidoalu || !nacimiento || !schoolmester || !foto){
+    const { nombretut, password, confpassword, nombrealu, apellidoalu, nacimiento, schoolmester, foto, grupo } = req.body;
+    if(!nombretut || !password || !confpassword || !nombrealu || !apellidoalu || !nacimiento || !schoolmester || !foto || !grupo) {
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
     const fullname = nombrealu+" "+apellidoalu;
@@ -14,7 +14,7 @@ const ingresaTutor = async (req, res) => {
         return res.status(403).send({ success: false, message: 'Contraseñas deben ser iguales'})
     }
     if(isPassValid(password)){
-        dbconnect.query('SELECT * FROM nombres_tutor_hijos', (error, resp, fields) => {
+        dbconnect.query('SELECT * FROM nombres_tutor_hijos', (error, resp) => {
             if(error)
                 console.log(error)
             else{
@@ -26,35 +26,41 @@ const ingresaTutor = async (req, res) => {
                         return res.status(409).send({ success: false, message: 'No se pueden duplicar registros del padre con el mismo estudiante'})
                     }
                 }
-                dbconnect.query('SELECT idAlumno FROM alumno', (e, r, fields) => {
+                dbconnect.query('SELECT idAlumno FROM alumno', (e, r) => {
                     if(e)
                         console.log(e)
                     const newaid = (r.length)+1;
-                    dbconnect.query('INSERT INTO alumno(idAlumno, nombre, fechaNacimiento, anioEscolar, fotografia) VALUES (?, ?, ?, ?, ?)', [newaid, fullname, nacimiento, schoolmester, foto], (err, resonse, fields) => {
+                    dbconnect.query('INSERT INTO alumno(idAlumno, nombre, fechaNacimiento, anioEscolar, fotografia) VALUES (?, ?, ?, ?, ?)', [newaid, fullname, nacimiento, schoolmester, foto], (err, reso) => {
                         if(err)
                             console.log(err)
                         else{
-                            dbconnect.query('SELECT idTutor FROM tutor', (er, re, fields) => {
-                                if(er)
-                                    console.log(er)
-                                const newtid = (re.length)+1;
-                                bcrypt.hash(password, salty, function(err, hash) {
-                                    dbconnect.query('INSERT INTO tutor(idTutor, usuario, contrasenia) VALUES (?, ?, "'+hash+'")', [newtid, nombretut], (error, response, fields) => {
-                                        if(error)
-                                            console.log(error)
-                                        else{
-                                            resonse.message = "Se ha creado un nuevo tutor!";
-                                            dbconnect.query('INSERT INTO `tutor-alumno`(idTutor, idAlumno) VALUES (?, ?)', [newtid, newaid], (err, respo, fields) => {
-                                                if(err)
-                                                    console.log(erro)
+                            dbconnect.query('INSERT INTO `alumno-grupo`(idAlumno, idGrupo) VALUES (?, ?)', [newaid, grupo], (err, resose) => {
+                                if(err)
+                                    console.log(err)
+                                else{
+                                    dbconnect.query('SELECT idTutor FROM tutor', (er, re) => {
+                                        if(er)
+                                            console.log(er)
+                                        const newtid = (re.length)+1;
+                                        bcrypt.hash(password, salty, function(err, hash) {
+                                            dbconnect.query('INSERT INTO tutor(idTutor, usuario, contrasenia) VALUES (?, ?, "'+hash+'")', [newtid, nombretut], (error, response) => {
+                                                if(error)
+                                                    console.log(error)
                                                 else{
-                                                    respo.message = "Se ha creado un nuevo tutor e ingresado un nuevo alumno!";
-                                                    return res.status(200).json(respo)
+                                                    response.message = "Se ha creado un nuevo tutor!";
+                                                    dbconnect.query('INSERT INTO `tutor-alumno`(idTutor, idAlumno) VALUES (?, ?)', [newtid, newaid], (err, respo) => {
+                                                        if(err)
+                                                            console.log(erro)
+                                                        else{
+                                                            respo.message = "Se ha creado un nuevo tutor e ingresado un nuevo alumno!";
+                                                            return res.status(200).json(respo)
+                                                        }
+                                                    })
                                                 }
                                             })
-                                        }
+                                        })
                                     })
-                                })
+                                }
                             })
                         }
                     })
@@ -118,6 +124,16 @@ const ingresaAdmin = async (req, res) => {
     else{
         return res.status(400).send({ success: false, message: 'La contraseña debe tener un dígito, una letra minuscula, una letra mayúscula, un caracter especial, y una longitud de más de 8 caracteres'})
     }
+}
+
+const getGrupos = async (req, res) => {
+    dbconnect.query('SELECT * FROM grupo', (error, response) => {
+        if(error)
+            console.log(error)
+        else{
+            res.send(response)
+        }
+    })
 }
 
 const getAdmins = async (req, res) => {
@@ -236,7 +252,7 @@ const borraTutor = async (req, res) => {
         if(error)
             console.log(error)
         else{
-            dbconnect.query('DELETE FROM tutor WHERE idTutor = ?', [id], (er, resp, fields) => {
+            dbconnect.query('DELETE FROM tutor WHERE idTutor = ?', [id], (er, resp) => {
                 if(er)
                     console.log(er)
                 else{
@@ -401,4 +417,4 @@ function isPassValid(str) {
     return /^(?=.*[0-9])(?=.*[#"!/()=?¿¡{}_$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(str);
 }
 
-module.exports = { ingresaTutor, ingresaAdmin, getAdmins, getTutores, getAlumnos, getAlumno, editaAlumno, editaTutor, editaAdmin, borraTutor, borraAdmin, ingresaHito, borraHito, editaHito, getHitosAlumno, getHitosDisplayPadre }
+module.exports = { ingresaTutor, ingresaAdmin, getGrupos, getAdmins, getTutores, getAlumnos, getAlumno, editaAlumno, editaTutor, editaAdmin, borraTutor, borraAdmin, ingresaHito, borraHito, editaHito, getHitosAlumno, getHitosDisplayPadre }
