@@ -157,7 +157,7 @@ const getTutores = async (req, res) => {
 }
 
 const getAlumnos = async (req, res) => {
-    dbconnect.query('SELECT * FROM alumno', (error, response) => {
+    dbconnect.query('SELECT alumno.idAlumno, alumno.nombre, alumno.fechaNacimiento, alumno.anioEscolar, alumno.fotografia, `alumno-grupo`.`idGrupo`, grupo.nombre AS nombregrupo  FROM `alumno`, `alumno-grupo`, `grupo` WHERE `alumno-grupo`.`idAlumno` = alumno.idAlumno AND `grupo`.`idGrupo` = `alumno-grupo`.`idGrupo`', (error, response) => {
         if(error)
             console.log(error)
         else{
@@ -178,18 +178,24 @@ const getAlumno = async (req, res) => {
 }
 
 const editaAlumno = async (req, res) => {
-    const { idal, nombrealu, apellidoalu, nacimiento, schoolmester, foto } = req.body;
-    if(!idal || !nombrealu || !apellidoalu || !nacimiento || !schoolmester || !foto){
+    const { idal, nombrealu, apellidoalu, nacimiento, schoolmester, foto, grupo } = req.body;
+    if(!idal || !nombrealu || !apellidoalu || !nacimiento || !schoolmester || !grupo){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
     console.log(foto)
     const fullname = nombrealu+" "+apellidoalu;
-    dbconnect.query('UPDATE alumno SET nombre = ?, fechaNacimiento = ?, anioEscolar = ? WHERE idAlumno = ?', [fullname, nacimiento, schoolmester, idal], (err, reso) => {
+    dbconnect.query('UPDATE alumno SET nombre = ?, fechaNacimiento = ?, anioEscolar = ? WHERE idAlumno = ?', [fullname, nacimiento, schoolmester, idal], (err, re) => {
         if(err)
             console.log(err)
         else{
-            reso.message = "Se ha actualizado la información!"
-            return res.status(200).json(reso)
+            dbconnect.query('UPDATE `alumno-grupo` SET `idGrupo` = ? WHERE `idAlumno` = ?', [grupo, idal], (erro, reso) => {
+                if(erro)
+                    console.log(erro)
+                else{
+                reso.message = "Se ha actualizado la información!"
+                return res.status(200).json(reso)
+                }
+            })
         }
     })
 }
