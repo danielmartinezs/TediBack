@@ -12,4 +12,6 @@ router.post('/crearreportehpv', Reportes.reporteHabilidadesPreVerbales)
 
 router.post('/crearreporteprueba', Reportes.reportePrueba);
 
+router.post('/uploadreporte', Reportes.uploadReporte);
+
 module.exports = router

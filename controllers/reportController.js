@@ -6,6 +6,7 @@ const PDFService = require('../services/pdfCreator');
 const path = require('path');
 const fs = require('fs');
 const { dirname } = require('path');
+const { response } = require('express');
 
 const helloWorld = (req, res) => {
     
@@ -56,4 +57,22 @@ const reportePrueba = (req, res) => {
     })
 }
 
-module.exports = { helloWorld, holaMundo, reporteEvaluacionArticulacion, reporteHabilidadesPreVerbales, reportePrueba };
+const uploadReporte = (req, res) => {
+    const { archivo, nombre } = req.body;
+    console.log(archivo);
+    console.log(nombre);
+    if(!archivo || !nombre) {
+        return res.status(400).send('No puedes dejar campos vacios');
+    }
+    dbconnect.query('INSERT INTO `reporte`(`nombre`, `archivo`) VALUES (?, ?)', [nombre, archivo], (err, response) => {
+        if(err) {
+            console.log(err);
+        }
+        else{
+            response.message = 'Reporte subido correctamente!';
+            return res.send(200).json(response);
+        }
+    })
+}
+
+module.exports = { helloWorld, holaMundo, reporteEvaluacionArticulacion, reporteHabilidadesPreVerbales, reportePrueba, uploadReporte };
