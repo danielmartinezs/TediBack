@@ -32,7 +32,9 @@ router.post('/borraanswer/:id', Cuestionarios.borraAnswer);
 
 router.post('/deleteqa', Cuestionarios.deleteQA);
 
-router.get('/getquestionnairesdetails/:id', Cuestionarios.getQuestionnairesDetails);
+router.get('/getquestionnaireinfo/:id', Cuestionarios.getQuestionnaireInfo);
+
+router.get('/getquestionnairedetails/:id', Cuestionarios.getQuestionnaireDetails);
 
 router.get('/getrecententry/:id', Cuestionarios.getLatestEntry);
 

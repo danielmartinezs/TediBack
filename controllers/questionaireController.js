@@ -317,9 +317,20 @@ const getCuestionarios = async (req, res) => {
     })
 }
 
-const getQuestionnairesDetails = async (req, res) => {
+const getQuestionnaireInfo = async (req, res) => {
     const { id } = req.params;
     dbconnect.query('SELECT * FROM cuestionario_preguntas_respuestas WHERE idCuestionario = ?', [id], (error, response) => {
+        if(error)
+            console.log(error)
+        else{
+            res.send(response);
+        }
+    })
+}
+
+const getQuestionnaireDetails = async (req, res) => {
+    const { id } = req.params;
+    dbconnect.query('SELECT preguntas.idPregunta, preguntas.pregunta, respuesta.opciones FROM `cuestionario-pregunta`, preguntas, respuesta WHERE `cuestionario-pregunta`.`idPregunta` = preguntas.idPregunta AND `cuestionario-pregunta`.`idRespuesta` = respuesta.idRespuesta AND `cuestionario-pregunta`.`idCuestionario` = ?', [id], (error, response) => {
         if(error)
             console.log(error)
         else{
@@ -655,4 +666,4 @@ const questionsInUse = async (req, res) => {//Mostrar visualmente las preguntas 
     })
 }
 
-module.exports = { editarNombreCuestionario, getMaterias, editarMateriaCuestionario, ingresaPreguntaRespuesta, getQuestions, editQuestion, editAndCreateQuestion, borraQuestion, addQuestion, getAnswers, getAnswer, editAllAnswers, editAndCreateAnswers, borraAnswer, deleteQA, getCuestionarios, getQuestionnairesDetails, uploadQuestionnaires, borrarCuestionario, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, vincularQA, establishKeys, establishKey, checkLinkAnswer, whereAnswerLink, answersInUse, checkLinkQuestion, whereQuestionLink, questionsInUse }
+module.exports = { editarNombreCuestionario, getMaterias, editarMateriaCuestionario, ingresaPreguntaRespuesta, getQuestions, editQuestion, editAndCreateQuestion, borraQuestion, addQuestion, getAnswers, getAnswer, editAllAnswers, editAndCreateAnswers, borraAnswer, deleteQA, getCuestionarios, getQuestionnaireInfo, getQuestionnaireDetails, uploadQuestionnaires, borrarCuestionario, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, vincularQA, establishKeys, establishKey, checkLinkAnswer, whereAnswerLink, answersInUse, checkLinkQuestion, whereQuestionLink, questionsInUse }

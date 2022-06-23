@@ -10,7 +10,7 @@ router.post('/crearreporteea', Reportes.reporteEvaluacionArticulacion)
 
 router.post('/crearreportehpv', Reportes.reporteHabilidadesPreVerbales)
 
-router.post('/crearreporteprueba', Reportes.reportePrueba);
+router.get('/getdatosreporte/:timestamp', Reportes.getDatosLatestReporte);
 
 router.post('/uploadreporte', Reportes.uploadReporte);
 
