@@ -22,6 +22,8 @@ router.post('/addquestion', Cuestionarios.addQuestion);
 
 router.get('/getanswers', Cuestionarios.getAnswers);
 
+router.get('/getanswersformatted', Cuestionarios.getAnswersFormatted);
+
 router.get('/getanswer/:id', Cuestionarios.getAnswer);
 
 router.post('/editanswer', Cuestionarios.editAllAnswers);

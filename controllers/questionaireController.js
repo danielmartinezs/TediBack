@@ -207,6 +207,19 @@ const getAnswers = async (req, res) => {
     })
 }
 
+const getAnswersFormatted = async (req, res) => {
+    dbconnect.query('SELECT idRespuesta, opciones FROM respuesta', (error, response) => {
+        if(error)
+            console.log(error)
+        else{
+            for(let i = 0; i < response.length; i++){
+                response[i].opciones = JSON.parse(response[i].opciones);
+            }
+            res.send(response);
+        }
+    })
+}
+
 const getAnswer = async (req, res) => {
     const { id } = req.params;
     dbconnect.query('SELECT idRespuesta AS id, opciones FROM respuesta WHERE idRespuesta = ?', [id], (error, response) => {
@@ -666,4 +679,4 @@ const questionsInUse = async (req, res) => {//Mostrar visualmente las preguntas 
     })
 }
 
-module.exports = { editarNombreCuestionario, getMaterias, editarMateriaCuestionario, ingresaPreguntaRespuesta, getQuestions, editQuestion, editAndCreateQuestion, borraQuestion, addQuestion, getAnswers, getAnswer, editAllAnswers, editAndCreateAnswers, borraAnswer, deleteQA, getCuestionarios, getQuestionnaireInfo, getQuestionnaireDetails, uploadQuestionnaires, borrarCuestionario, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, vincularQA, establishKeys, establishKey, checkLinkAnswer, whereAnswerLink, answersInUse, checkLinkQuestion, whereQuestionLink, questionsInUse }
+module.exports = { editarNombreCuestionario, getMaterias, editarMateriaCuestionario, ingresaPreguntaRespuesta, getQuestions, editQuestion, editAndCreateQuestion, borraQuestion, addQuestion, getAnswers, getAnswer, getAnswersFormatted, editAllAnswers, editAndCreateAnswers, borraAnswer, deleteQA, getCuestionarios, getQuestionnaireInfo, getQuestionnaireDetails, uploadQuestionnaires, borrarCuestionario, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, vincularQA, establishKeys, establishKey, checkLinkAnswer, whereAnswerLink, answersInUse, checkLinkQuestion, whereQuestionLink, questionsInUse }
