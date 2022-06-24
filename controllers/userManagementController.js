@@ -146,6 +146,17 @@ const getAdmins = async (req, res) => {
     })
 }
 
+const getAdmin = async (req, res) => {
+    const { id } = req.params;
+    dbconnect.query('SELECT * FROM admin WHERE idAdministrador = ?', [id], (error, response) => {
+        if(error)
+            console.log(error)
+        else{
+            res.send(response)
+        }
+    })
+}
+
 const getTutores = async (req, res) => {
     dbconnect.query('SELECT * FROM info_tutor_alumno', (error, response) => {
         if(error)
@@ -437,4 +448,4 @@ function isPassValid(str) {
     return /^(?=.*[0-9])(?=.*[#"!/()=?¿¡{}_$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(str);
 }
 
-module.exports = { ingresaTutor, ingresaAdmin, getGrupos, getAdmins, getTutores, getAlumnos, getAlumno, editaAlumno, editaTutor, editaAdmin, borraTutor, borraAdmin, ingresaHito, borraHito, editaHito, getHitosAlumno, getHitosDisplayPadre, getAlumnosGrupo }
+module.exports = { ingresaTutor, ingresaAdmin, getGrupos, getAdmins, getAdmin, getTutores, getAlumnos, getAlumno, editaAlumno, editaTutor, editaAdmin, borraTutor, borraAdmin, ingresaHito, borraHito, editaHito, getHitosAlumno, getHitosDisplayPadre, getAlumnosGrupo }
