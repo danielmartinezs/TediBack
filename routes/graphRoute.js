@@ -8,4 +8,6 @@ router.post('/generagraphadmin/:id', Graph.getDatosGraphAdmin)
 
 router.post('/generagraphadminnon/:id', Graph.getDatosGraphAdminNoN)
 
+router.post('/generagraphgrupo', Graph.getDatosGraphGrupo)
+
 module.exports = router
