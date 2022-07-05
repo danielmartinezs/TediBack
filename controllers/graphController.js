@@ -36,6 +36,17 @@ const getDatosGraphAdminNoN = async (req, res) => {
 }
 
 const getDatosGraphGrupo = async (req, res) => {
+    const { id } = req.params;
+    dbconnect.query('SELECT `cuestionario-alumno`.`puntaje`, `cuestionario-alumno`.`fecha`, alumno.nombre FROM `cuestionario-alumno`, `alumno-grupo`, alumno, grupo WHERE `cuestionario-alumno`.`idAlumno` = alumno.idAlumno AND `alumno-grupo`.`idAlumno` = alumno.idAlumno AND `alumno-grupo`.`idGrupo` = grupo.idGrupo AND grupo.idGrupo = ?', [id], (err, respo) => {
+        if(err)
+            console.log(err)
+        else{
+            return res.status(200).json(respo)
+        }
+    })
+}
+
+const getDatosGraphGrupos = async (req, res) => {
     dbconnect.query('SELECT SUM(`cuestionario-alumno`.`puntaje`) as total, grupo.nombre FROM `cuestionario-alumno`, `alumno-grupo`, grupo WHERE `cuestionario-alumno`.`idAlumno` = `alumno-grupo`.`idAlumno` AND `alumno-grupo`.`idGrupo` = grupo.idGrupo AND `cuestionario-alumno`.`puntaje` IS NOT NULL GROUP BY grupo.idGrupo', (err, respo) => {
         if(err)
             console.log(err)
@@ -45,4 +56,4 @@ const getDatosGraphGrupo = async (req, res) => {
     })
 }
 
-module.exports = { getDatosGraphPadre, getDatosGraphAdmin, getDatosGraphAdminNoN, getDatosGraphGrupo }
+module.exports = { getDatosGraphPadre, getDatosGraphAdmin, getDatosGraphAdminNoN, getDatosGraphGrupo, getDatosGraphGrupos }
