@@ -37,7 +37,7 @@ const getDatosGraphAdminNoN = async (req, res) => {
 
 const getDatosGraphGrupo = async (req, res) => {
     const { id } = req.params;
-    dbconnect.query('SELECT `cuestionario-alumno`.`puntaje`, `cuestionario-alumno`.`fecha`, alumno.nombre FROM `cuestionario-alumno`, `alumno-grupo`, alumno, grupo WHERE `cuestionario-alumno`.`idAlumno` = alumno.idAlumno AND `alumno-grupo`.`idAlumno` = alumno.idAlumno AND `alumno-grupo`.`idGrupo` = grupo.idGrupo AND grupo.idGrupo = ?', [id], (err, respo) => {
+    dbconnect.query('SELECT `cuestionario-alumno`.`puntaje`, `cuestionario-alumno`.`fecha`, alumno.nombre FROM `cuestionario-alumno`, `alumno-grupo`, alumno, grupo WHERE `cuestionario-alumno`.`idAlumno` = alumno.idAlumno AND `alumno-grupo`.`idAlumno` = alumno.idAlumno AND `alumno-grupo`.`idGrupo` = grupo.idGrupo AND `cuestionario-alumno`.`puntaje` IS NOT NULL AND grupo.idGrupo = ?', [id], (err, respo) => {
         if(err)
             console.log(err)
         else{
