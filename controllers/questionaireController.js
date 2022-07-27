@@ -45,6 +45,8 @@ const editarMateriaCuestionario = async (req, res) => {
 
 const ingresaPreguntaRespuesta = async (req, res) => {
     const { idp, idr } = req.body;
+    console.log(idp)
+    console.log(idr)
     if(!idp || !idr){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
