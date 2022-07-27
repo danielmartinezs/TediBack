@@ -93,7 +93,35 @@ const getDatosLatestReporte = (req, res) => {
     })
 }
 
-const uploadReporte = (req, res) => {
+const uploadPlanSemestral = (req, res) => {
+    const { nombre, descripcion, semestre, alumno } = req.body;
+    if(!nombre || !descripcion || !semestre || !alumno) {
+        return res.status(400).json({
+            success: false,
+            message: 'Todos los campos son obligatorios'
+        })
+    }
+    let idSemestre = semestre[0].idSemestre;
+    dbconnect.query('SELECT idAlumno FROM `alumno` WHERE nombre = ?', [alumno], (err, response) => {
+        if(err) {
+            console.log(err);
+        }
+        else{
+            let idAlumno = response[0].idAlumno;
+            dbconnect.query('INSERT INTO `alumno-semestre`(`idAlumno`, `idSemestre`, `planSemestral`, `detalles`) VALUES (?, ?, ?, ?)', [idAlumno, idSemestre, nombre, descripcion], (err, response) => {
+                if(err) {
+                    console.log(err);
+                }
+                else{
+                    response.message = 'El plan semestral ha sido cargado correctamente!';
+                    return res.status(200).json(response);
+                }
+            })
+        }
+    })
+}
+
+const uploadReporteHPV = (req, res) => {
     const { nombre, fc, fm } = req.body;
     if(!nombre || !fc || !fm) {
         return res.status(400).send('No puedes dejar campos vacios');
@@ -109,4 +137,20 @@ const uploadReporte = (req, res) => {
     })
 }
 
-module.exports = { getSemestre, cambiarSemestre, helloWorld, holaMundo, reporteEvaluacionArticulacion, reporteHabilidadesPreVerbales, getDatosLatestReporte, uploadReporte };
+const uploadReporteEA = (req, res) => {
+    const { nombre, fc, fm } = req.body;
+    if(!nombre || !fc || !fm) {
+        return res.status(400).send('No puedes dejar campos vacios');
+    }
+    dbconnect.query('INSERT INTO `reporte`(`nombre`, `fechaCreacion`, `fechaModificado`) VALUES (?, ?, ?)', [nombre, fc, fm], (err, response) => {
+        if(err) {
+            console.log(err);
+        }
+        else{
+            response.message = 'Reporte subido correctamente!';
+            return res.status(200).json(response);
+        }
+    })
+}
+
+module.exports = { getSemestre, cambiarSemestre, helloWorld, holaMundo, reporteEvaluacionArticulacion, reporteHabilidadesPreVerbales, getDatosLatestReporte, uploadPlanSemestral, uploadReporteHPV, uploadReporteEA };

@@ -16,6 +16,10 @@ router.post('/crearreportehpv', Reportes.reporteHabilidadesPreVerbales)
 
 router.get('/getdatosreporte/:timestamp', Reportes.getDatosLatestReporte);
 
-router.post('/uploadreporte', Reportes.uploadReporte);
+router.post('/uploadplansemestral', Reportes.uploadPlanSemestral);
+
+router.post('/uploadreportehpv', Reportes.uploadReporteHPV);
+
+router.post('/uploadreporteea', Reportes.uploadReporteEA);
 
 module.exports = router
