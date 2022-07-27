@@ -6,6 +6,7 @@ const salty = 10;
 
 const ingresaTutor = async (req, res) => {
     const { nombretut, password, confpassword, nombrealu, apellidoalu, nacimiento, schoolmester, foto, grupo } = req.body;
+    console.log(schoolmester)
     if(!nombretut || !password || !confpassword || !nombrealu || !apellidoalu || !nacimiento || !schoolmester || !foto || !grupo) {
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
@@ -30,7 +31,7 @@ const ingresaTutor = async (req, res) => {
                     if(e)
                         console.log(e)
                     const newaid = (r.length)+1;
-                    dbconnect.query('INSERT INTO alumno(idAlumno, nombre, fechaNacimiento, anioEscolar, fotografia) VALUES (?, ?, ?, ?, ?)', [newaid, fullname, nacimiento, schoolmester, foto], (err, reso) => {
+                    dbconnect.query('INSERT INTO alumno(idAlumno, nombre, fechaNacimiento, fotografia) VALUES (?, ?, ?, ?, ?)', [newaid, fullname, nacimiento, foto], (err, reso) => {
                         if(err)
                             console.log(err)
                         else{
@@ -38,27 +39,34 @@ const ingresaTutor = async (req, res) => {
                                 if(err)
                                     console.log(err)
                                 else{
-                                    dbconnect.query('SELECT idTutor FROM tutor', (er, re) => {
-                                        if(er)
-                                            console.log(er)
-                                        const newtid = (re.length)+1;
-                                        bcrypt.hash(password, salty, function(err, hash) {
-                                            dbconnect.query('INSERT INTO tutor(idTutor, usuario, contrasenia) VALUES (?, ?, "'+hash+'")', [newtid, nombretut], (error, response) => {
-                                                if(error)
-                                                    console.log(error)
-                                                else{
-                                                    response.message = "Se ha creado un nuevo tutor!";
-                                                    dbconnect.query('INSERT INTO `tutor-alumno`(idTutor, idAlumno) VALUES (?, ?)', [newtid, newaid], (err, respo) => {
-                                                        if(err)
-                                                            console.log(erro)
+                                    dbconnect.query('INSERT INTO `alumno-semestre`(idAlumno, idSemestre) VALUES (?, ?)', [newaid, schoolmester], (e, r) => {
+                                        if(e)
+                                            console.log(e)
+                                        else{
+                                            dbconnect.query('SELECT idTutor FROM tutor', (er, re) => {
+                                                if(er)
+                                                    console.log(er)
+                                                const newtid = (re.length)+1;
+                                                bcrypt.hash(password, salty, function(err, hash) {
+                                                    dbconnect.query('INSERT INTO tutor(idTutor, usuario, contrasenia) VALUES (?, ?, "'+hash+'")', [newtid, nombretut], (error, response) => {
+                                                        if(error)
+                                                            console.log(error)
                                                         else{
-                                                            respo.message = "Se ha creado un nuevo tutor e ingresado un nuevo alumno!";
-                                                            return res.status(200).json(respo)
+                                                            response.message = "Se ha creado un nuevo tutor!";
+                                                            dbconnect.query('INSERT INTO `tutor-alumno`(idTutor, idAlumno) VALUES (?, ?)', [newtid, newaid], (err, respo) => {
+                                                                if(err)
+                                                                    console.log(erro)
+                                                                else{
+                                                                    respo.message = "Se ha creado un nuevo tutor e ingresado un nuevo alumno!";
+                                                                    return res.status(200).json(respo)
+                                                                }
+                                                            })
                                                         }
                                                     })
                                                 }
-                                            })
-                                        })
+                                            )}
+                                            )
+                                        }
                                     })
                                 }
                             })
@@ -168,7 +176,7 @@ const getTutores = async (req, res) => {
 }
 
 const getAlumnos = async (req, res) => {
-    dbconnect.query('SELECT alumno.idAlumno, alumno.nombre, alumno.fechaNacimiento, alumno.anioEscolar, alumno.fotografia, `alumno-grupo`.`idGrupo`, grupo.nombre AS nombregrupo  FROM `alumno`, `alumno-grupo`, `grupo` WHERE `alumno-grupo`.`idAlumno` = alumno.idAlumno AND `grupo`.`idGrupo` = `alumno-grupo`.`idGrupo`', (error, response) => {
+    dbconnect.query('SELECT alumno.idAlumno, alumno.nombre, alumno.fechaNacimiento, alumno.fotografia, `alumno-grupo`.`idGrupo`, grupo.nombre AS nombregrupo  FROM `alumno`, `alumno-grupo`, `grupo` WHERE `alumno-grupo`.`idAlumno` = alumno.idAlumno AND `grupo`.`idGrupo` = `alumno-grupo`.`idGrupo`', (error, response) => {
         if(error)
             console.log(error)
         else{
@@ -179,7 +187,7 @@ const getAlumnos = async (req, res) => {
 
 const getAlumno = async (req, res) => {
     const { id } = req.params;
-    dbconnect.query('SELECT alumno.idAlumno, alumno.nombre, alumno.fechaNacimiento, alumno.anioEscolar, alumno.fotografia FROM alumno, `tutor-alumno`, tutor WHERE alumno.idAlumno = `tutor-alumno`.`idAlumno` AND tutor.idTutor = `tutor-alumno`.`idTutor` AND tutor.idTutor = ?', [id], (error, response) => {
+    dbconnect.query('SELECT alumno.idAlumno, alumno.nombre, alumno.fechaNacimiento, alumno.fotografia FROM alumno, `tutor-alumno`, tutor WHERE alumno.idAlumno = `tutor-alumno`.`idAlumno` AND tutor.idTutor = `tutor-alumno`.`idTutor` AND tutor.idTutor = ?', [id], (error, response) => {
         if(error)
             console.log(error)
         else{
@@ -189,13 +197,12 @@ const getAlumno = async (req, res) => {
 }
 
 const editaAlumno = async (req, res) => {
-    const { idal, nombrealu, apellidoalu, nacimiento, schoolmester, foto, grupo } = req.body;
-    if(!idal || !nombrealu || !apellidoalu || !nacimiento || !schoolmester || !grupo){
+    const { idal, nombrealu, apellidoalu, nacimiento, foto, grupo } = req.body;
+    if(!idal || !nombrealu || !apellidoalu || !nacimiento || !grupo){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
-    console.log(foto)
     const fullname = nombrealu+" "+apellidoalu;
-    dbconnect.query('UPDATE alumno SET nombre = ?, fechaNacimiento = ?, anioEscolar = ? WHERE idAlumno = ?', [fullname, nacimiento, schoolmester, idal], (err, re) => {
+    dbconnect.query('UPDATE alumno SET nombre = ?, fechaNacimiento = ? WHERE idAlumno = ?', [fullname, nacimiento, idal], (err, re) => {
         if(err)
             console.log(err)
         else{
