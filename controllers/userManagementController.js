@@ -135,7 +135,7 @@ const ingresaAdmin = async (req, res) => {
 }
 
 const getGrupos = async (req, res) => {
-    dbconnect.query('SELECT * FROM grupo', (error, response) => {
+    dbconnect.query('SELECT idGrupo, nombre FROM grupo', (error, response) => {
         if(error)
             console.log(error)
         else{
