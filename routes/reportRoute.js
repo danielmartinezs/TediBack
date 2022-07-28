@@ -18,7 +18,7 @@ router.get('/getdatosreporte/:timestamp', Reportes.getDatosLatestReporte);
 
 router.post('/uploadplansemestral', Reportes.uploadPlanSemestral);
 
-router.get('/getplanessemestral', Reportes.getPlanesSemestral);
+//router.get('/getplanessemestral', Reportes.getPlanesSemestral);
 
 router.post('/uploadreportehpv', Reportes.uploadReporteHPV);
 
