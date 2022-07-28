@@ -18,7 +18,7 @@ app.use('/questionnaires', require('./routes/questionaireRoute.js'));
 app.use('/reportes', require('./routes/reportRoute.js'));
 app.use('/graphs', require('./routes/graphRoute.js'));
 
-app.listen('port', function(){
+app.listen(process.env.PORT || 5000, function(){
     console.log(`express server running on port`, app.get('port'));
 });
 
