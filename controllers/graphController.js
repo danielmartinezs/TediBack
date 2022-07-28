@@ -1,5 +1,4 @@
 const { response } = require('express');
-const bcrypt = require('bcrypt');
 const dbconnect = require('../config/dbConnection.js');
 
 const getDatosGraphPadre = async (req, res) => {

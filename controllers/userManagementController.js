@@ -1,5 +1,5 @@
 const express = require('express');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const dbconnect = require('../config/dbConnection.js');
 const { application, response } = require('express');
 const salty = 10;
