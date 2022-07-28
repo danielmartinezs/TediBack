@@ -20,7 +20,7 @@ app.use('/graphs', require('./routes/graphRoute.js'));
 
 app.get('/', (req, res) => {
     //res.send('Hello World');
-    res.send('Conectado a la base de datos'+process.env.DB_HOST);
+    res.send('Conectado a la base de datos '+process.env.DB_HOST);
 });
 
 app.listen(process.env.PORT || 5000, function(){
