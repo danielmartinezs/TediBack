@@ -2,6 +2,9 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
+  "engines": {
+    "node": "17.5.0"
+  },
   "main": "app.js",
   "scripts": {
     "dev": "react-scripts start",
