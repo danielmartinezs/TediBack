@@ -20,6 +20,10 @@ app.use('/questionnaires', require('./routes/questionaireRoute.js'));
 app.use('/reportes', require('./routes/reportRoute.js'));
 app.use('/graphs', require('./routes/graphRoute.js'));
 
-app.listen(app.get('port'), function(){
+app.listen('port', function(){
     console.log(`express server running on port`, app.get('port'));
 });
+
+/* app.listen(app.get('port'), function(){
+    console.log(`express server running on port`, app.get('port'));
+}); */
