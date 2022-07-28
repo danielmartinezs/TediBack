@@ -4,8 +4,12 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "devstart": "nodemon app.js"
+    "dev": "react-scripts start",
+    "start": "serve -s build",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject",
+    "heroku-postbuild": "npm run build"
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +26,7 @@
     "pdfkit": "^0.13.0",
     "pdfkit-construct": "^1.2.3",
     "pdfkit-table": "^0.1.99",
-    "pdfmake": "^0.2.5"
+    "pdfmake": "^0.2.5",
+    "serve": "^14.0.1"
   }
 }
