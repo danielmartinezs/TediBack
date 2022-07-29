@@ -410,7 +410,7 @@ const borrarCuestionario = async (req, res) => {
 
 const getLatestEntry = async (req, res) => {
     const { id } = req.params;
-    dbconnect.query('SELECT (MAX(fecha)) AS ultimoregistro FROM `cuestionario-alumno` WHERE idAlumno=?', [id], (err, response) => {
+    dbconnect.query('SELECT (MAX(fecha), '+"'"+"+00:00"+"'"+', '+"'"+"-05:00"+"'"+') AS ultimoregistro FROM `cuestionario-alumno` WHERE idAlumno=?', [id], (err, response) => {
         if(err)
             console.log(err)
         else{
