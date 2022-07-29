@@ -8,7 +8,7 @@ router.get('/getsemestre', Reportes.getSemestre)
 
 router.post('/newsemestre', Reportes.cambiarSemestre)
 
-router.get('/getfechasalumno', Reportes.especificaFechaReportes)
+router.get('/getfechasalumnohpv/:id', Reportes.especificaFechaReportesHPV)
 
 router.get('/holamundo', Reportes.holaMundo)
 

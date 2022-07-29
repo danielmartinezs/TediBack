@@ -48,15 +48,15 @@ const cambiarSemestre = (req, res) => {
     })
 }
 
-const especificaFechaReportes = (req, res) => {
-    const { ida, idc } = req.body;
-    if(!ida || !idc) {
+const especificaFechaReportesHPV = (req, res) => {
+    const { id } = req.body;
+    if(!id) {
         return res.status(400).json({
             success: false,
             message: 'Todos los campos son obligatorios'
         })
     }
-    dbconnect.query('SELECT fecha FROM `cuestionario-alumno`WHERE idAlumno = ? AND idCuestionario = ?', [ida, idc], (err, response) => {
+    dbconnect.query('SELECT fecha FROM `cuestionario-alumno`WHERE idAlumno = ? AND idCuestionario = 1', [id], (err, response) => {
         if(err) {
             console.log(err);
         }
@@ -217,4 +217,4 @@ const uploadReporteEA = (req, res) => {
     })
 }
 
-module.exports = { getSemestre, cambiarSemestre, especificaFechaReportes, helloWorld, holaMundo, reporteEvaluacionArticulacion, reporteHabilidadesPreVerbales, getDatosLatestReporte, uploadPlanSemestral, getPlanSemestral, uploadReporteSemestral, uploadReporteHPV, uploadReporteEA };
+module.exports = { getSemestre, cambiarSemestre, especificaFechaReportesHPV, helloWorld, holaMundo, reporteEvaluacionArticulacion, reporteHabilidadesPreVerbales, getDatosLatestReporte, uploadPlanSemestral, getPlanSemestral, uploadReporteSemestral, uploadReporteHPV, uploadReporteEA };
