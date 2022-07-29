@@ -410,8 +410,7 @@ const borrarCuestionario = async (req, res) => {
 
 const getLatestEntry = async (req, res) => {
     const { id } = req.params;
-    //dbconnect.query('SELECT MAX(fecha) AS ultimoregistro FROM `cuestionario-alumno` WHERE idAlumno=?', [id], (err, response) => {
-    dbconnect.query('SELECT CONVERT_TZ(MAX(fecha), '+"'"+"+00:00"+"'"+', '+"'"+"-05:00"+"'"+') AS ultimoregistro FROM `cuestionario-alumno` WHERE idAlumno=?', [id], (err, response) => {
+    dbconnect.query('SELECT (MAX(fecha)) AS ultimoregistro FROM `cuestionario-alumno` WHERE idAlumno=?', [id], (err, response) => {
         if(err)
             console.log(err)
         else{
@@ -421,11 +420,7 @@ const getLatestEntry = async (req, res) => {
 }
 
 const uploadNewQuestionnaire = async (req, res) => {
-    const { idc, nombrec, materia, qa } = req.body
-    //console.log(idc)
-    //console.log(nombrec)
-    //console.log(materia)
-    //console.log(qa)
+    const { idc, nombrec, materia, qa } = req.body;
     if(!idc || !nombrec || !materia  || !qa){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
