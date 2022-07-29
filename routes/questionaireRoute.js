@@ -42,11 +42,11 @@ router.get('/getrecententry/:id', Cuestionarios.getLatestEntry);
 
 router.get('/getcuestionarios', Cuestionarios.getCuestionarios);
 
-router.post('/uploadquestionnaire', Cuestionarios.uploadQuestionnaires);
+router.post('/submitquestionnaire', Cuestionarios.submitQuestionnaire);
 
 router.post('/uploadnewquestionnaire', Cuestionarios.uploadNewQuestionnaire);
 
-router.post('/edituploadedquestionnaire', Cuestionarios.editUploadedQuestionnaire);
+router.post('/editsubmittedquestionnaire', Cuestionarios.editSubmittedQuestionnaire);
 
 router.post('/deletequestionnaire/:id', Cuestionarios.borrarCuestionario);
 

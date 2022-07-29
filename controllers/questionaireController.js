@@ -354,7 +354,7 @@ const getQuestionnaireDetails = async (req, res) => {
     })
 }
 
-const uploadQuestionnaires = async (req, res) => {
+const submitQuestionnaire = async (req, res) => {
     const { ida, idc, respuestas, comentarios, puntaje } = req.body;
     if(!ida || !idc || !respuestas || !comentarios){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
@@ -369,7 +369,7 @@ const uploadQuestionnaires = async (req, res) => {
     })
 }
 
-const editUploadedQuestionnaire = async (req, res) => {
+const editSubmittedQuestionnaire = async (req, res) => {
     const { ida, idc, timestamp, respuestas, comentarios, puntaje } = req.body;
     if(!ida || !idc || !timestamp || !respuestas || !comentarios){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
@@ -676,4 +676,4 @@ const questionsInUse = async (req, res) => {//Mostrar visualmente las preguntas 
     })
 }
 
-module.exports = { editarNombreCuestionario, getMaterias, editarMateriaCuestionario, ingresaPreguntaRespuesta, getQuestions, editQuestion, editAndCreateQuestion, borraQuestion, addQuestion, getAnswers, getAnswer, getAnswersFormatted, editAllAnswers, editAndCreateAnswers, borraAnswer, deleteQA, getCuestionarios, getQuestionnaireInfo, getQuestionnaireDetails, uploadQuestionnaires, borrarCuestionario, editUploadedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, vincularQA, establishKeys, establishKey, checkLinkAnswer, whereAnswerLink, answersInUse, checkLinkQuestion, whereQuestionLink, questionsInUse }
+module.exports = { editarNombreCuestionario, getMaterias, editarMateriaCuestionario, ingresaPreguntaRespuesta, getQuestions, editQuestion, editAndCreateQuestion, borraQuestion, addQuestion, getAnswers, getAnswer, getAnswersFormatted, editAllAnswers, editAndCreateAnswers, borraAnswer, deleteQA, getCuestionarios, getQuestionnaireInfo, getQuestionnaireDetails, submitQuestionnaire, borrarCuestionario, editSubmittedQuestionnaire, getLatestEntry, uploadNewQuestionnaire, vincularQA, establishKeys, establishKey, checkLinkAnswer, whereAnswerLink, answersInUse, checkLinkQuestion, whereQuestionLink, questionsInUse }
