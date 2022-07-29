@@ -18,6 +18,14 @@ app.use('/questionnaires', require('./routes/questionaireRoute.js'));
 app.use('/reportes', require('./routes/reportRoute.js'));
 app.use('/graphs', require('./routes/graphRoute.js'));
 
-app.listen(app.get('port'), function(){
+app.get('/', (req, res) => {
+    res.send('Hello World, estoy conectado a la base de datos '+process.env.DATABASE);
+});
+
+app.listen(process.env.PORT || 5000, function(){
     console.log(`express server running on port`, app.get('port'));
 });
+
+/* app.listen(app.get('port'), function(){
+    console.log(`express server running on port`, app.get('port'));
+}); */
