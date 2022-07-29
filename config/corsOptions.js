@@ -1,8 +1,14 @@
 const allowedOrgins = require('./allowedOrigins');
 
 const corsOptions = {
-    origin: 'https://fascinating-crumble-61bdb4.netlify.app || http://localhost:3000',
-    optionsSuccessStatus: 200,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    origin: (origin, callback) => {
+        if(allowedOrgins.indexOf(origin) !== -1 || !origin){ //remove !origin after development
+            callback(null, true)
+        } else{
+            callback(new Error('Not allowed by CORS'));
+        }
+    }, 
+    optionsSuccessStatus: 200
 }
+
 module.exports = corsOptions;
