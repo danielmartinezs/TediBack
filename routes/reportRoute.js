@@ -8,6 +8,8 @@ router.get('/getsemestre', Reportes.getSemestre)
 
 router.post('/newsemestre', Reportes.cambiarSemestre)
 
+router.get('/getfechasalumno/:idAlumno', Reportes.especificaFechaReporteHPV)
+
 router.get('/holamundo', Reportes.holaMundo)
 
 router.post('/crearreporteea', Reportes.reporteEvaluacionArticulacion)
