@@ -368,7 +368,7 @@ const submitQuestionnaire = async (req, res) => {
                 if(error)
                     console.log(error)
                 else{
-                    response.message = "Respuestas registradas a la hora: "+time;
+                    response.message = time;
                     return res.status(200).json(response)
                 }
             })
