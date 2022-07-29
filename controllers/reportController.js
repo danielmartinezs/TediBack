@@ -141,7 +141,7 @@ const uploadPlanSemestral = (req, res) => {
 
 const getPlanSemestral = (req, res) => {
     const { id } = req.params;
-    if(!alumno) {
+    if(!id) {
         return res.status(400).json({
             success: false,
             message: 'Todos los campos son obligatorios'
