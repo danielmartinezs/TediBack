@@ -359,12 +359,19 @@ const submitQuestionnaire = async (req, res) => {
     if(!ida || !idc || !respuestas || !comentarios){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
-    dbconnect.query('INSERT INTO `cuestionario-alumno`(idAlumno, idCuestionario, fecha, respuestas, comentarios, puntaje) VALUES (?,?,CURRENT_TIMESTAMP(),?,?,?)', [ida, idc, respuestas, comentarios, puntaje], (error, response) => {
+    dbconnect.query('SELECT CURRENT_TIMESTAMP', (error, response) => {
         if(error)
             console.log(error)
         else{
-            response.message = "Respuestas registradas!";
-            return res.status(200).json(response)
+            let time = response[0]['CURRENT_TIMESTAMP'];
+            dbconnect.query('INSERT INTO `cuestionario-alumno`(idAlumno, idCuestionario, fecha, respuestas, comentarios, puntaje) VALUES (?,?,?,?,?,?)', [ida, idc, time, respuestas, comentarios, puntaje], (error, response) => {
+                if(error)
+                    console.log(error)
+                else{
+                    response.message = "Respuestas registradas a la hora: "+time;
+                    return res.status(200).json(response)
+                }
+            })
         }
     })
 }
