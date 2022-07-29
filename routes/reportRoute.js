@@ -8,7 +8,7 @@ router.get('/getsemestre', Reportes.getSemestre)
 
 router.post('/newsemestre', Reportes.cambiarSemestre)
 
-router.get('/getfechasalumno/:idAlumno', Reportes.especificaFechaReporteHPV)
+router.get('/getfechasalumno', Reportes.especificaFechaReportes)
 
 router.get('/holamundo', Reportes.holaMundo)
 
@@ -20,7 +20,9 @@ router.get('/getdatosreporte/:timestamp', Reportes.getDatosLatestReporte);
 
 router.post('/uploadplansemestral', Reportes.uploadPlanSemestral);
 
-//router.get('/getplanessemestral', Reportes.getPlanesSemestral);
+router.get('/getplansemestral/:id', Reportes.getPlanSemestral);
+
+router.post('/uploadreportesemestral', Reportes.uploadReporteSemestral);
 
 router.post('/uploadreportehpv', Reportes.uploadReporteHPV);
 

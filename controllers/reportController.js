@@ -48,15 +48,15 @@ const cambiarSemestre = (req, res) => {
     })
 }
 
-const especificaFechaReporteHPV = (req, res) => {
-    const { idAlumno } = req.params;
-    if(!idAlumno) {
+const especificaFechaReportes = (req, res) => {
+    const { ida, idc } = req.body;
+    if(!ida || !idc) {
         return res.status(400).json({
             success: false,
             message: 'Todos los campos son obligatorios'
         })
     }
-    dbconnect.query('SELECT fecha FROM `cuestionario-alumno`WHERE idAlumno = ? AND idCuestionario = 1', [idAlumno], (err, response) => {
+    dbconnect.query('SELECT fecha FROM `cuestionario-alumno`WHERE idAlumno = ? AND idCuestionario = ?', [ida, idc], (err, response) => {
         if(err) {
             console.log(err);
         }
@@ -139,6 +139,52 @@ const uploadPlanSemestral = (req, res) => {
     })
 }
 
+const getPlanSemestral = (req, res) => {
+    const { id } = req.params;
+    if(!alumno) {
+        return res.status(400).json({
+            success: false,
+            message: 'Todos los campos son obligatorios'
+        })
+    }
+    dbconnect.query('SELECT alumno-semestre.idAlumno, alumno-semestre.idSemestre, alumno-semestre.planSemestral, alumno-semestre.detalles FROM `alumno-semestre` WHERE alumno-semestre.idAlumno = ?', [id], (err, response) => {
+        if(err) {
+            console.log(err);
+        }
+        else{
+            return res.send(response);
+        }
+    })
+}
+
+const uploadReporteSemestral = (req, res) => {
+    const { nombre, descripcion, semestre, alumno, complete } = req.body;
+    if(!nombre || !descripcion || !semestre || !alumno || !complete) {
+        return res.status(400).json({
+            success: false,
+            message: 'Todos los campos son obligatorios'
+        })
+    }
+    let idSemestre = semestre[0].idSemestre;
+    dbconnect.query('SELECT idAlumno FROM `alumno` WHERE nombre = ?', [alumno], (err, response) => {
+        if(err) {
+            console.log(err);
+        }
+        else{
+            let idAlumno = response[0].idAlumno;
+            dbconnect.query('INSERT INTO `alumno-semestre`(`idAlumno`, `idSemestre`, `reporteSemestral`, `detalles`) VALUES (?, ?, ?, ?)', [idAlumno, idSemestre, nombre, descripcion], (err, response) => {
+                if(err) {
+                    console.log(err);
+                }
+                else{
+                    response.message = 'El reporte semestral ha sido cargado correctamente!';
+                    return res.status(200).json(response);
+                }
+            })
+        }
+    })
+}
+
 const uploadReporteHPV = (req, res) => {
     const { nombre, fc, fm } = req.body;
     if(!nombre || !fc || !fm) {
@@ -171,4 +217,4 @@ const uploadReporteEA = (req, res) => {
     })
 }
 
-module.exports = { getSemestre, cambiarSemestre, especificaFechaReporteHPV, helloWorld, holaMundo, reporteEvaluacionArticulacion, reporteHabilidadesPreVerbales, getDatosLatestReporte, uploadPlanSemestral, uploadReporteHPV, uploadReporteEA };
+module.exports = { getSemestre, cambiarSemestre, especificaFechaReportes, helloWorld, holaMundo, reporteEvaluacionArticulacion, reporteHabilidadesPreVerbales, getDatosLatestReporte, uploadPlanSemestral, getPlanSemestral, uploadReporteSemestral, uploadReporteHPV, uploadReporteEA };
