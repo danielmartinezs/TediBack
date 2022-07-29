@@ -56,7 +56,7 @@ const especificaFechaReportesHPV = (req, res) => {
             message: 'Todos los campos son obligatorios'
         })
     }
-    dbconnect.query('SELECT fecha FROM `cuestionario-alumno`WHERE idAlumno = ? AND idCuestionario = 1', [id], (err, response) => {
+    dbconnect.query('SELECT fecha FROM `cuestionario-alumno` WHERE idAlumno = ? AND idCuestionario = 1', [id], (err, response) => {
         if(err) {
             console.log(err);
         }
