@@ -1,6 +1,7 @@
 require('dotenv').config();
 const cors = require("cors"); 
 const express = require("express");
+const corsOptions = require('./config/corsOptions.js');
 const app = express();
 
 //SETTINGS
@@ -9,7 +10,7 @@ app.set('port', process.env.PORT || 5000);
 //MIDDLEWARE
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
-app.use(cors());
+app.use(cors(corsOptions));
 
 //ROUTES
 app.use('/login', require('./routes/loginRoute.js'));
