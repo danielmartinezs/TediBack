@@ -147,7 +147,7 @@ const getPlanSemestral = (req, res) => {
             message: 'Todos los campos son obligatorios'
         })
     }
-    dbconnect.query('SELECT alumno-semestre.idAlumno, alumno-semestre.idSemestre, alumno-semestre.planSemestral, alumno-semestre.detalles FROM `alumno-semestre` WHERE alumno-semestre.idAlumno = ?', [id], (err, response) => {
+    dbconnect.query('SELECT `alumno-semestre`.idAlumno, `alumno-semestre`.idSemestre, `alumno-semestre`.planSemestral, `alumno-semestre`.detalles FROM `alumno-semestre` WHERE `alumno-semestre`.idAlumno = ?', [id], (err, response) => {
         if(err) {
             console.log(err);
         }
