@@ -176,7 +176,7 @@ const getTutores = async (req, res) => {
 }
 
 const getAlumnos = async (req, res) => {
-    dbconnect.query('SELECT alumno.idAlumno, alumno.nombre, alumno.fechaNacimiento, alumno.fotografia, `alumno-grupo`.`idGrupo`, grupo.nombre AS nombregrupo  FROM `alumno`, `alumno-grupo`, `grupo` WHERE `alumno-grupo`.`idAlumno` = alumno.idAlumno AND `grupo`.`idGrupo` = `alumno-grupo`.`idGrupo`', (error, response) => {
+    dbconnect.query('SELECT alumno.idAlumno, alumno.nombre, alumno.fechaNacimiento, alumno.fotografia, `alumno-grupo`.`idGrupo`, grupo.nombre AS nombregrupo  FROM `alumno`, `alumno-grupo`, `grupo` WHERE `alumno-grupo`.`idAlumno` = alumno.idAlumno AND `grupo`.`idGrupo` = `alumno-grupo`.`idGrupo` ORDER BY `alumno`.`nombre` ASC', (error, response) => {
         if(error)
             console.log(error)
         else{
