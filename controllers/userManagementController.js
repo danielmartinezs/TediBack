@@ -166,7 +166,7 @@ const getAdmin = async (req, res) => {
 }
 
 const getTutores = async (req, res) => {
-    dbconnect.query('SELECT * FROM info_tutor_alumno', (error, response) => {
+    dbconnect.query('SELECT * FROM `info_tutor_alumno` ORDER BY `info_tutor_alumno`.`nombre` ASC', (error, response) => {
         if(error)
             console.log(error)
         else{
