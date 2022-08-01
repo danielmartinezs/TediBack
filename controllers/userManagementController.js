@@ -10,7 +10,6 @@ const ingresaTutor = async (req, res) => {
     if(!nombretut || !password || !confpassword || !nombrealu || !apellidoalu || !nacimiento || !schoolmester || !foto || !grupo) {
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
-    const fullname = nombrealu+" "+apellidoalu;
     if(password !== confpassword){
         return res.status(403).send({ success: false, message: 'Contraseñas deben ser iguales'})
     }
@@ -31,7 +30,7 @@ const ingresaTutor = async (req, res) => {
                     if(e)
                         console.log(e)
                     const newaid = (r.length)+1;
-                    dbconnect.query('INSERT INTO alumno(idAlumno, nombre, fechaNacimiento, fotografia) VALUES (?, ?, ?, ?, ?)', [newaid, fullname, nacimiento, foto], (err, reso) => {
+                    dbconnect.query('INSERT INTO alumno(idAlumno, nombre, apellido, fechaNacimiento, fotografia) VALUES (?, ?, ?, ?, ?)', [newaid, nombrealu, apellidoalu, nacimiento, foto], (err, reso) => {
                         if(err)
                             console.log(err)
                         else{
@@ -176,7 +175,7 @@ const getTutores = async (req, res) => {
 }
 
 const getAlumnos = async (req, res) => {
-    dbconnect.query('SELECT alumno.idAlumno, alumno.nombre, alumno.fechaNacimiento, alumno.fotografia, `alumno-grupo`.`idGrupo`, grupo.nombre AS nombregrupo  FROM `alumno`, `alumno-grupo`, `grupo` WHERE `alumno-grupo`.`idAlumno` = alumno.idAlumno AND `grupo`.`idGrupo` = `alumno-grupo`.`idGrupo` ORDER BY `alumno`.`nombre` ASC', (error, response) => {
+    dbconnect.query('SELECT alumno.idAlumno, alumno.nombre, alumno.apellido, alumno.fechaNacimiento, alumno.fotografia, `alumno-grupo`.`idGrupo`, grupo.nombre AS nombregrupo  FROM `alumno`, `alumno-grupo`, `grupo` WHERE `alumno-grupo`.`idAlumno` = alumno.idAlumno AND `grupo`.`idGrupo` = `alumno-grupo`.`idGrupo` ORDER BY `alumno`.`nombre` ASC', (error, response) => {
         if(error)
             console.log(error)
         else{
@@ -187,7 +186,7 @@ const getAlumnos = async (req, res) => {
 
 const getAlumno = async (req, res) => {
     const { id } = req.params;
-    dbconnect.query('SELECT alumno.idAlumno, alumno.nombre, alumno.fechaNacimiento, alumno.fotografia FROM alumno, `tutor-alumno`, tutor WHERE alumno.idAlumno = `tutor-alumno`.`idAlumno` AND tutor.idTutor = `tutor-alumno`.`idTutor` AND tutor.idTutor = ?', [id], (error, response) => {
+    dbconnect.query('SELECT alumno.idAlumno, alumno.nombre, alumno.apellido, alumno.fechaNacimiento, alumno.fotografia FROM alumno, `tutor-alumno`, tutor WHERE alumno.idAlumno = `tutor-alumno`.`idAlumno` AND tutor.idTutor = `tutor-alumno`.`idTutor` AND tutor.idTutor = ?', [id], (error, response) => {
         if(error)
             console.log(error)
         else{
@@ -201,8 +200,7 @@ const editaAlumno = async (req, res) => {
     if(!idal || !nombrealu || !apellidoalu || !nacimiento || !grupo){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
-    const fullname = nombrealu+" "+apellidoalu;
-    dbconnect.query('UPDATE alumno SET nombre = ?, fechaNacimiento = ? WHERE idAlumno = ?', [fullname, nacimiento, idal], (err, re) => {
+    dbconnect.query('UPDATE alumno SET nombre = ?, apellido = ?, fechaNacimiento = ? WHERE idAlumno = ?', [nombrealu, apellidoalu, nacimiento, idal], (err, re) => {
         if(err)
             console.log(err)
         else{
