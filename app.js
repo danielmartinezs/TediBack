@@ -5,7 +5,7 @@ const corsOptions = require('./config/corsOptions.js');
 const app = express();
 
 //SETTINGS
-app.set('port', process.env.PORT || 5000);
+app.set('port', process.env.PORT || 3306);
 
 //MIDDLEWARE
 app.use(express.urlencoded({extended: false}));
