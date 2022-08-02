@@ -1,5 +1,5 @@
 const allowedOrgins = [
     'https://tediescolar.com',
-    '82.180.138.154',
+    'https://fascinating-crumble-61bdb4.netlify.app/',
 ];
 module.exports = allowedOrgins;
