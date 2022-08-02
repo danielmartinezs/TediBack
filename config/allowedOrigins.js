@@ -1,6 +1,5 @@
 const allowedOrgins = [
     'https://tediescolar.com',
-    'localhost:443',
-    'localhost:3306'
+    '82.180.138.154',
 ];
 module.exports = allowedOrgins;
