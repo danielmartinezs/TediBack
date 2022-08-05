@@ -50,7 +50,7 @@ const especificaFechaReporte = (req, res) => {
             message: 'Todos los campos son obligatorios'
         })
     }
-    dbconnect.query('SELECT fecha FROM `cuestionario-alumno` WHERE idAlumno = ? AND idCuestionario = ?', [idAlumno, idCuestionario], (err, response) => {
+    dbconnect.query('SELECT fecha FROM `cuestionario-alumno` WHERE idAlumno = ? AND idCuestionario = ? ORDER BY `cuestionario-alumno`.`fecha` DESC', [idAlumno, idCuestionario], (err, response) => {
         if(err) {
             console.log(err);
         }
