@@ -1,12 +1,6 @@
-const PDF = require('pdfkit');
-const PDFC = require('pdfkit-construct');
 const express = require('express');
 const dbconnect = require('../config/dbConnection.js');
-const PDFService = require('../services/pdfCreator');
-const path = require('path');
-const fs = require('fs');
-const { dirname } = require('path');
-const { response } = require('express');
+
 
 const getSemestre = (req, res) => {
     dbconnect.query('SELECT MAX(idSemestre) FROM `semestre`', (err, response) => {
@@ -48,6 +42,24 @@ const cambiarSemestre = (req, res) => {
     })
 }
 
+const especificaFechaReporte = (req, res) => {
+    const { idCuestionario, idAlumno } = req.body;
+    if(!idCuestionario || !idAlumno) {
+        return res.status(400).json({
+            success: false,
+            message: 'Todos los campos son obligatorios'
+        })
+    }
+    dbconnect.query('SELECT fecha FROM `cuestionario-alumno` WHERE idAlumno = ? AND idCuestionario = ?', [idAlumno, idCuestionario], (err, response) => {
+        if(err) {
+            console.log(err);
+        }
+        else{
+            return res.send(response);
+        }
+    })
+}
+
 const especificaFechaReportesHPV = (req, res) => {
     const { id } = req.params;
     if(!id) {
@@ -64,36 +76,6 @@ const especificaFechaReportesHPV = (req, res) => {
             return res.send(response);
         }
     })
-}
-
-const helloWorld = (req, res) => {
-    
-    const filename = `HelloWorld${Date.now()}.pdf`;
-    PDFService.helloWorldMake(filename);
-    const dir = path.join(__dirname, `../pdfs/${filename}`);
-    return res.send(dir);
-}
-
-const holaMundo = (req, res) => {
-
-    const filename = `HolaMundo${Date.now()}.pdf`;
-    PDFService.generaReporte(filename);
-    const dir = path.join(__dirname, `../pdfs/${filename}`);
-    return res.send(dir);
-}
-
-const reporteEvaluacionArticulacion = (req, res) => {
-    const filename = `ReporteEvaluacionArticulacion.pdf`;
-    PDFService.crearReporteEvaluacionArticulacion(filename);
-    const dir = path.join(__dirname, `../pdfs/${filename}`);
-    return res.send(dir);
-}
-
-const reporteHabilidadesPreVerbales = (req, res) => {
-    const filename = `ReporteHabilidadesPreverbales.pdf`;
-    PDFService.crearReporteHabilidadesPreVerbales(filename);
-    const dir = path.join(__dirname, `../pdfs/${filename}`);
-    return res.send(dir);
 }
 
 const getDatosLatestReporte = (req, res) => {
@@ -217,4 +199,4 @@ const uploadReporteEA = (req, res) => {
     })
 }
 
-module.exports = { getSemestre, cambiarSemestre, especificaFechaReportesHPV, helloWorld, holaMundo, reporteEvaluacionArticulacion, reporteHabilidadesPreVerbales, getDatosLatestReporte, uploadPlanSemestral, getPlanSemestral, uploadReporteSemestral, uploadReporteHPV, uploadReporteEA };
+module.exports = { getSemestre, cambiarSemestre, especificaFechaReporte, especificaFechaReportesHPV, getDatosLatestReporte, uploadPlanSemestral, getPlanSemestral, uploadReporteSemestral, uploadReporteHPV, uploadReporteEA };
