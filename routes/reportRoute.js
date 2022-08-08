@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Reportes = require('../controllers/reportController.js');
 
-router.get('/helloWorld', Reportes.helloWorld);
-
 router.get('/getsemestre', Reportes.getSemestre)
 
 router.post('/newsemestre', Reportes.cambiarSemestre)
