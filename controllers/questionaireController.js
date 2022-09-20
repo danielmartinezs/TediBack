@@ -359,11 +359,12 @@ const submitQuestionnaire = async (req, res) => {
     if(!ida || !idc || !respuestas || !comentarios){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
-    dbconnect.query('SELECT CURRENT_TIMESTAMP', (error, response) => {
+    dbconnect.query('SET time_zone = `-04:00`; SELECT CURRENT_TIMESTAMP', (error, response) => {
         if(error)
             console.log(error)
         else{
             let time = response[0]['CURRENT_TIMESTAMP'];
+            console.log(time)
             dbconnect.query('INSERT INTO `cuestionario-alumno`(idAlumno, idCuestionario, fecha, respuestas, comentarios, puntaje) VALUES (?,?,?,?,?,?)', [ida, idc, time, respuestas, comentarios, puntaje], (error, response) => {
                 if(error)
                     console.log(error)
