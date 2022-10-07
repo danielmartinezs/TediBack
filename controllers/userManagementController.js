@@ -19,56 +19,20 @@ const ingresaTutor = async (req, res) => {
                 console.log(error)
             else{
                 let newtut = nombretut;
-                let newal = fullname;
+                let newal = nombrealu+" "+apellidoalu;
                 for(let i = 0; i<resp.length; i++){
                 if(resp[i].usuario == newtut){
                     if(resp[i].nombre == newal)
                         return res.status(409).send({ success: false, message: 'No se pueden duplicar registros del padre con el mismo estudiante'})
                     }
                 }
-                dbconnect.query('SELECT idAlumno FROM alumno', (e, r) => {
-                    if(e)
-                        console.log(e)
-                    const newaid = (r.length)+1;
-                    dbconnect.query('INSERT INTO alumno(idAlumno, nombre, apellido, fechaNacimiento, fotografia) VALUES (?, ?, ?, ?, ?)', [newaid, nombrealu, apellidoalu, nacimiento, foto], (err, reso) => {
-                        if(err)
-                            console.log(err)
+                bcrypt.hash(password, salty, function(err, hash) {
+                    dbconnect.query('CALL SPCreateTutor(?, ?, ?, ?, ?, ?, ?, ?)', [nombretut, confpassword, nombrealu, apellidoalu, nacimiento, schoolmester, foto, grupo], (error, response) => {
+                        if(error)
+                            console.log(error)
                         else{
-                            dbconnect.query('INSERT INTO `alumno-grupo`(idAlumno, idGrupo) VALUES (?, ?)', [newaid, grupo], (err, resose) => {
-                                if(err)
-                                    console.log(err)
-                                else{
-                                    dbconnect.query('INSERT INTO `alumno-semestre`(idAlumno, idSemestre) VALUES (?, ?)', [newaid, schoolmester], (e, r) => {
-                                        if(e)
-                                            console.log(e)
-                                        else{
-                                            dbconnect.query('SELECT idTutor FROM tutor', (er, re) => {
-                                                if(er)
-                                                    console.log(er)
-                                                const newtid = (re.length)+1;
-                                                bcrypt.hash(password, salty, function(err, hash) {
-                                                    dbconnect.query('INSERT INTO tutor(idTutor, usuario, contrasenia) VALUES (?, ?, "'+hash+'")', [newtid, nombretut], (error, response) => {
-                                                        if(error)
-                                                            console.log(error)
-                                                        else{
-                                                            response.message = "Se ha creado un nuevo tutor!";
-                                                            dbconnect.query('INSERT INTO `tutor-alumno`(idTutor, idAlumno) VALUES (?, ?)', [newtid, newaid], (err, respo) => {
-                                                                if(err)
-                                                                    console.log(erro)
-                                                                else{
-                                                                    respo.message = "Se ha creado un nuevo tutor e ingresado un nuevo alumno!";
-                                                                    return res.status(200).json(respo)
-                                                                }
-                                                            })
-                                                        }
-                                                    })
-                                                }
-                                            )}
-                                            )
-                                        }
-                                    })
-                                }
-                            })
+                            response.message = "Se ha creado un nuevo tutor e ingresado un nuevo alumno!";
+                                    return res.status(200).json(response)
                         }
                     })
                 })
