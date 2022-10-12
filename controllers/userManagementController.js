@@ -269,8 +269,8 @@ const borraTutor = async (req, res) => {
                                             }
                                         }
                                     })
-                                    resonse.message = "Tutor/Alumno borrado exitosamente!";
-                                    return res.status(200).json(resonse)
+                                    reso.message = "Tutor/Alumno borrado exitosamente!";
+                                    return res.status(200).json(reso)
                                 }
                             )}
                     })
