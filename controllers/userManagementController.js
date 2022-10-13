@@ -161,10 +161,10 @@ const getAlumno = async (req, res) => {
 
 const editaAlumno = async (req, res) => {
     const { idal, nombrealu, apellidoalu, nacimiento, foto, grupo } = req.body;
-    if(!idal || !nombrealu || !apellidoalu || !nacimiento || !grupo){
+    if(!idal || !nombrealu || !apellidoalu || !nacimiento || !foto || !grupo){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
-    dbconnect.query('UPDATE alumno SET nombre = ?, apellido = ?, fechaNacimiento = ? WHERE idAlumno = ?', [nombrealu, apellidoalu, nacimiento, idal], (err, re) => {
+    dbconnect.query('UPDATE alumno SET nombre = ?, apellido = ?, fechaNacimiento = ?, fotografia = ? WHERE idAlumno = ?', [nombrealu, apellidoalu, nacimiento, foto, idal], (err, re) => {
         if(err)
             console.log(err)
         else{
@@ -200,6 +200,16 @@ const editaTutor = async (req, res) => {
             })
         })
     }
+    else if(password === ""){
+        dbconnect.query('UPDATE tutor SET usuario = ? WHERE idTutor = ?', [nombretut, hash, idtut], (e, r, fields) => {
+            if(e)
+                console.log(e)
+            else{
+                r.message = "Se ha actualizado la información!"
+                return res.status(200).json(r)
+            }
+            })
+    }
     else{
         return res.status(400).send({ success: false, message: 'La contraseña debe tener un dígito, una letra minuscula, una letra mayúscula, un caracter especial, y una longitud de más de 8 caracteres'})
     }
@@ -215,7 +225,7 @@ const editaAdmin = async (req, res) => {
     }
     if(isPassValid(password)){
         bcrypt.hash(password, salty, function(e, hash) {
-            dbconnect.query('UPDATE admin SET usuario = ?, contrasenia = ? WHERE idAdministrador = ?', [nombread, hash, idadmin], (er, re, fields) => {
+            dbconnect.query('UPDATE admin SET usuario = ?, contrasenia = ? WHERE idAdministrador = ?', [nombread, idadmin], (er, re) => {
                 if(er)
                     console.log(er)
                 else{
@@ -225,6 +235,16 @@ const editaAdmin = async (req, res) => {
             })
         })
 
+    }
+    else if(password === ""){
+        dbconnect.query('UPDATE admin SET usuario = ? WHERE idAdministrador = ?', [nombread, idadmin], (e, r) => {
+            if(e)
+                console.log(e)
+            else{
+                r.message = "Se ha actualizado la información!"
+                return res.status(200).json(r)
+            }
+            })
     }
     else{
         return res.status(400).send({ success: false, message: 'La contraseña debe tener un dígito, una letra minuscula, una letra mayúscula, un caracter especial, y una longitud de más de 8 caracteres'})
