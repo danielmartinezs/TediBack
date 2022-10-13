@@ -23,14 +23,14 @@ const getSemestre = (req, res) => {
 
 
 const cambiarSemestre = (req, res) => {
-    const { periodo, año, fechaInicio, fechaFin } = req.body;
-    if(!periodo || !año || !fechaInicio || !fechaFin) {
+    const { periodo, anio, fechaInicio, fechaFin } = req.body;
+    if(!periodo || !anio || !fechaInicio || !fechaFin) {
         return res.status(400).json({
             success: false,
             message: 'Todos los campos son obligatorios'
         })
     }
-    let period = periodo+" "+año;
+    let period = periodo+" "+anio;
     dbconnect.query('INSERT INTO `semestre`(`periodo`, `fechaInicio`, `fechaFin`) VALUES (?, ?, ?)', [period, fechaInicio, fechaFin], (err, response) => {
         if(err) {
             console.log(err);
@@ -101,22 +101,15 @@ const uploadPlanSemestral = (req, res) => {
             message: 'Todos los campos son obligatorios'
         })
     }
-    let idSemestre = semestre[0].idSemestre;
-    dbconnect.query('SELECT idAlumno FROM `alumno` WHERE nombre = ?', [alumno], (err, response) => {
+    let cero = 0;
+    let vacio = '';
+    dbconnect.query('INSERT INTO `alumno-semestre`(`idAlumno`, `idSemestre`, `planSemestral`, `detalles`, `reporteSemestral`, `cumplido`) VALUES (?, ?, ?, ?, ?, ?)', [idalumno, semestre, nombre, descripcion, vacio, cero], (err, response) => {
         if(err) {
             console.log(err);
         }
         else{
-            let idAlumno = response[0].idAlumno;
-            dbconnect.query('INSERT INTO `alumno-semestre`(`idAlumno`, `idSemestre`, `planSemestral`, `detalles`) VALUES (?, ?, ?, ?)', [idAlumno, idSemestre, nombre, descripcion], (err, response) => {
-                if(err) {
-                    console.log(err);
-                }
-                else{
-                    response.message = 'El plan semestral ha sido cargado correctamente!';
-                    return res.status(200).json(response);
-                }
-            })
+            response.message = 'El plan semestral ha sido cargado correctamente!';
+            return res.status(200).json(response);
         }
     })
 }
@@ -129,7 +122,7 @@ const getPlanSemestral = (req, res) => {
             message: 'Todos los campos son obligatorios'
         })
     }
-    dbconnect.query('SELECT `semestre`.`periodo`, `alumno-semestre`.idAlumno, `alumno-semestre`.idSemestre, `alumno-semestre`.planSemestral, `alumno-semestre`.detalles FROM `alumno-semestre`, `semestre` WHERE  `alumno-semestre`.`idSemestre` = `semestre`.`idSemestre` AND`alumno-semestre`.idAlumno = ?', [id], (err, response) => {
+    dbconnect.query('SELECT `semestre`.`periodo`, `alumno-semestre`.idAlumno, `alumno-semestre`.idSemestre, `alumno-semestre`.planSemestral, `alumno-semestre`.detalles FROM `alumno-semestre`, `semestre` WHERE  `alumno-semestre`.`idSemestre` = `semestre`.`idSemestre` AND `alumno-semestre`.idAlumno = ?', [id], (err, response) => {
         if(err) {
             console.log(err);
         }
@@ -140,29 +133,20 @@ const getPlanSemestral = (req, res) => {
 }
 
 const uploadReporteSemestral = (req, res) => {
-    const { nombre, descripcion, semestre, alumno, complete } = req.body;
-    if(!nombre || !descripcion || !semestre || !alumno || !complete) {
+    const { descripcion, semestre, alumno, complete } = req.body;
+    if(!descripcion || !semestre || !alumno || !complete) {
         return res.status(400).json({
             success: false,
             message: 'Todos los campos son obligatorios'
         })
     }
-    let idSemestre = semestre[0].idSemestre;
-    dbconnect.query('SELECT idAlumno FROM `alumno` WHERE nombre = ?', [alumno], (err, response) => {
+    dbconnect.query('UPDATE `alumno-semestre` SET `reporteSemestral`= ?, `cumplido`= ? WHERE `idAlumno` = ? AND `idSemestre` = ?', [descripcion, complete, alumno, semestre], (err, response) => {
         if(err) {
             console.log(err);
         }
         else{
-            let idAlumno = response[0].idAlumno;
-            dbconnect.query('INSERT INTO `alumno-semestre`(`idAlumno`, `idSemestre`, `reporteSemestral`, `detalles`) VALUES (?, ?, ?, ?)', [idAlumno, idSemestre, nombre, descripcion], (err, response) => {
-                if(err) {
-                    console.log(err);
-                }
-                else{
-                    response.message = 'El reporte semestral ha sido cargado correctamente!';
-                    return res.status(200).json(response);
-                }
-            })
+            response.message = 'El reporte semestral ha sido cargado correctamente!';
+            return res.status(200).json(response);
         }
     })
 }
