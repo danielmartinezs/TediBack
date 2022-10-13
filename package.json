@@ -21,7 +21,7 @@
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
-    "nodemon": "^2.0.20",
+    "nodemon": "^2.0.19",
     "pdfkit": "^0.13.0",
     "pdfkit-construct": "^1.2.3",
     "pdfkit-table": "^0.1.99",
