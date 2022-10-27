@@ -8,8 +8,6 @@ router.post('/newsemestre', Reportes.cambiarSemestre)
 
 router.post('/especificafechareporte', Reportes.especificaFechaReporte)
 
-router.get('/getfechasalumnohpv/:id', Reportes.especificaFechaReportesHPV)
-
 router.get('/getdatosreporte/:timestamp', Reportes.getDatosLatestReporte);
 
 router.post('/uploadplansemestral', Reportes.uploadPlanSemestral);
