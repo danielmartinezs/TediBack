@@ -9,7 +9,7 @@ const getSemestre = (req, res) => {
         }
         else{
             let semestre = response[0]['MAX(idSemestre)'];
-            dbconnect.query('SELECT * FROM `semestre` WHERE idSemestre = ?', [semestre], (err, response) => {
+            dbconnect.query('SELECT idSemestre, periodo, fechaInicio, fechaFin FROM `semestre` WHERE idSemestre = ?', [semestre], (err, response) => {
                 if (err) {
                     console.log(err);
                 }
@@ -65,12 +65,34 @@ const getDatosLatestReporte = (req, res) => {
     if(!timestamp) {
         return res.status(400).send('Falta el timestamp');
     }
-    dbconnect.query('SELECT `cuestionario-alumno`.`idCuestionario`, `cuestionario-alumno`.respuestas, `cuestionario-alumno`.comentarios, `cuestionario-alumno`.fecha, `cuestionario-alumno`.puntaje, alumno.nombre, alumno.apellido, cuestionario.nombre AS titulo, cuestionario.materia FROM `cuestionario-alumno`, alumno, cuestionario WHERE `cuestionario-alumno`.`idAlumno` = alumno.idAlumno AND `cuestionario-alumno`.`idCuestionario`= cuestionario.idCuestionario AND fecha = ?', [timestamp], (err, response) => {
+    dbconnect.query('SELECT `cuestionario-alumno`.`idCuestionario`, `cuestionario-alumno`.respuestas, `cuestionario-alumno`.comentarios, `cuestionario-alumno`.fecha, `cuestionario-alumno`.puntaje, alumno.idAlumno, alumno.nombre, alumno.apellido, cuestionario.nombre AS titulo, cuestionario.materia FROM `cuestionario-alumno`, alumno, cuestionario WHERE `cuestionario-alumno`.`idAlumno` = alumno.idAlumno AND `cuestionario-alumno`.`idCuestionario`= cuestionario.idCuestionario AND fecha = ?', [timestamp], (err, response) => {
         if(err) {
             console.log(err);
         }
         else{
             return res.send(response);
+        }
+    })
+}
+
+const getReportesAlumno = (req, res) => {
+    const { id } = req.params;
+    dbconnect.query('SELECT `reporte`.idReporte, nombre, ruta, fechaModificado, fechaCreacion, disponible FROM `reporte`, `reporte-alumno` WHERE `reporte`.`idReporte` = `reporte-alumno`.`idReporte` AND `reporte-alumno`.idAlumno = ?', [id], (err, response) => {
+        if(err)
+            console.log(err)
+        else{
+            res.send(response);
+        }
+    })
+}
+
+const getReportesAlumnoDisponible = (req, res) => {
+    const { id, semestre } = req.params;
+    dbconnect.query('SELECT `reporte`.idReporte, nombre, ruta, fechaModificado, fechaCreacion, `semestre`.`periodo` FROM `reporte`, `reporte-alumno`, `semestre` WHERE `reporte`.`idReporte` = `reporte-alumno`.`idReporte` AND `reporte-alumno`.idAlumno = ? AND `reporte`.`disponible` = 1 AND semestre.idSemestre = ?', [id, semestre], (err, response) => {
+        if(err)
+            console.log(err)
+        else{
+            res.send(response);
         }
     })
 }
@@ -133,18 +155,42 @@ const uploadReporteSemestral = (req, res) => {
     })
 }
 
-const uploadReporteHPV = (req, res) => {
-    const { nombre, fc, fm } = req.body;
-    if(!nombre || !fc || !fm) {
+const uploadRuta = (req, res) => {
+    const { ruta, idr } = req.body;
+    if(!ruta || !idr) {
         return res.status(400).send('No puedes dejar campos vacios');
     }
-    dbconnect.query('INSERT INTO `reporte`(`nombre`, `fechaCreacion`, `fechaModificado`) VALUES (?, ?, ?)', [nombre, fc, fm], (err, response) => {
+    dbconnect.query('UPDATE `reporte` SET `ruta`= ? WHERE idReporte = ?', [ruta, idr], (error, response) => {
+        if(error) {
+            console.log(error);
+        }
+        else{
+            response.message = 'La ruta ha sido asignada!';
+            return res.status(200).json(response);
+        }
+    })
+}
+
+const uploadReporteHPV = (req, res) => {
+    const { nombre, idc, ida, ids} = req.body;
+    if(!nombre || !idc || !ida || !ids) {
+        return res.status(400).send('No puedes dejar campos vacios');
+    }
+    let cero = 0;
+    let ruta = '';
+    dbconnect.query('INSERT INTO `reporte`(`nombre`, `ruta`, `fechaCreacion`, `fechaModificado`, `disponible`) VALUES (?, ?, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP(), ?)', [nombre, ruta, cero], (err) => {
         if(err) {
             console.log(err);
         }
         else{
-            response.message = 'Reporte subido correctamente!';
-            return res.status(200).json(response);
+            dbconnect.query('CALL SPLinkReporte(?, ?, ?)', [ida, idc, ids], (error, response) => {
+                if(error)
+                    console.log(error)
+                else{
+                    response.message = 'Reporte subido correctamente!';
+                    return res.status(200).json(response);
+                }
+            })
         }
     })
 }
@@ -165,4 +211,20 @@ const uploadReporteEA = (req, res) => {
     })
 }
 
-module.exports = { getSemestre, cambiarSemestre, especificaFechaReporte, getDatosLatestReporte, uploadPlanSemestral, getPlanSemestral, uploadReporteSemestral, uploadReporteHPV, uploadReporteEA };
+const publicarReporte = (req, res) => {
+    const { idr, dispo } = req.body;
+    if(!idr || !dispo) {
+        return res.status(400).send('No puedes dejar campos vacios');
+    }
+    dbconnect.query('UPDATE `reporte` SET `disponible`= ? WHERE idReporte = ?', [dispo, idr], (error, response) => {
+        if(error) {
+            console.log(error);
+        }
+        else{
+            response.message = 'Disponibilidad del reporte modificada';
+            return res.status(200).json(response);
+        }
+    })
+}
+
+module.exports = { getSemestre, cambiarSemestre, especificaFechaReporte, getDatosLatestReporte, getReportesAlumno, getReportesAlumnoDisponible, uploadPlanSemestral, getPlanSemestral, uploadReporteSemestral, uploadRuta, uploadReporteHPV, uploadReporteEA, publicarReporte };
