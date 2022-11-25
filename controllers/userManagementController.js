@@ -182,7 +182,7 @@ const editaAlumno = async (req, res) => {
 
 const editaTutor = async (req, res) => {
     const { idtut, nombretut, password, confpassword } = req.body;
-    if(!idtut || !nombretut || !password || !confpassword){
+    if(!idtut || !nombretut){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
     if(password !== confpassword){
@@ -190,7 +190,7 @@ const editaTutor = async (req, res) => {
     }
     if(isPassValid(password)){
         bcrypt.hash(password, salty, function(err, hash) {
-        dbconnect.query('UPDATE tutor SET usuario = ?, contrasenia = ? WHERE idTutor = ?', [nombretut, hash, idtut], (e, r, fields) => {
+        dbconnect.query('UPDATE tutor SET usuario = ?, contrasenia = ? WHERE idTutor = ?', [nombretut, hash, idtut], (e, r) => {
             if(e)
                 console.log(e)
             else{
@@ -201,14 +201,14 @@ const editaTutor = async (req, res) => {
         })
     }
     else if(password === ""){
-        dbconnect.query('UPDATE tutor SET usuario = ? WHERE idTutor = ?', [nombretut, hash, idtut], (e, r, fields) => {
+        dbconnect.query('UPDATE tutor SET usuario = ? WHERE idTutor = ?', [nombretut, idtut], (e, r) => {
             if(e)
                 console.log(e)
             else{
                 r.message = "Se ha actualizado la información!"
                 return res.status(200).json(r)
             }
-            })
+        })
     }
     else{
         return res.status(400).send({ success: false, message: 'La contraseña debe tener un dígito, una letra minuscula, una letra mayúscula, un caracter especial, y una longitud de más de 8 caracteres'})
