@@ -7,12 +7,13 @@ const salty = 10;
 const ingresaTutor = async (req, res) => {
     const { nombretut, password, confpassword, nombrealu, apellidoalu, nacimiento, schoolmester, foto, grupo } = req.body;
     console.log(schoolmester)
-    if(!nombretut || !password || !confpassword || !nombrealu || !apellidoalu || !nacimiento || !schoolmester || !foto || !grupo) {
+    if(!nombretut || !password || !confpassword || !nombrealu || !apellidoalu || !nacimiento || !schoolmester || !grupo) {
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
     if(password !== confpassword){
         return res.status(403).send({ success: false, message: 'Contraseñas deben ser iguales'})
     }
+    let fotof = formatURLDrive(foto);
     if(isPassValid(password)){
         dbconnect.query('SELECT * FROM nombres_tutor_hijos', (error, resp) => {
             if(error)
@@ -27,7 +28,7 @@ const ingresaTutor = async (req, res) => {
                     }
                 }
                 bcrypt.hash(password, salty, function(err, hash) {
-                    dbconnect.query('CALL SPCreateTutor(?, ?, ?, ?, ?, ?, ?, ?)', [nombretut, confpassword, nombrealu, apellidoalu, nacimiento, schoolmester, foto, grupo], (error, response) => {
+                    dbconnect.query('CALL SPCreateTutor(?, ?, ?, ?, ?, ?, ?, ?)', [nombretut, confpassword, nombrealu, apellidoalu, nacimiento, schoolmester, fotof, grupo], (error, response) => {
                         if(error)
                             console.log(error)
                         else{
@@ -161,7 +162,7 @@ const getAlumno = async (req, res) => {
 
 const editaAlumno = async (req, res) => {
     const { idal, nombrealu, apellidoalu, nacimiento, foto, grupo } = req.body;
-    if(!idal || !nombrealu || !apellidoalu || !nacimiento || !foto || !grupo){
+    if(!idal || !nombrealu || !apellidoalu || !nacimiento || !grupo){
         return res.status(400).send({ success: false, message: 'No puedes dejar campos vacíos'})
     }
     dbconnect.query('UPDATE alumno SET nombre = ?, apellido = ?, fechaNacimiento = ?, fotografia = ? WHERE idAlumno = ?', [nombrealu, apellidoalu, nacimiento, foto, idal], (err, re) => {
@@ -434,7 +435,18 @@ const getAlumnosGrupo = async (req, res) => {
 }
 
 function isPassValid(str) {
-    return /^(?=.*[0-9])(?=.*[#"!/()=?¿¡{}_$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(str);
+    return /^(?=.*[0-9])(?=.*[@#"!/()=?¿¡{[`}_$%^&.-<>*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(str);
+}
+
+function formatURLDrive(str) {
+    if(str === ""){
+        return "";
+    }
+    else{
+        let fotoformat = str.replace("file/d/","uc?export=view&id=");
+        let fotoformatted = fotoformat.replace("/view?usp=sharing","");
+        return fotoformatted;
+    }
 }
 
 module.exports = { ingresaTutor, ingresaAdmin, getGrupos, getAdmins, getAdmin, getTutores, getAlumnos, getAlumno, editaAlumno, editaTutor, editaAdmin, borraTutor, borraAdmin, ingresaHito, borraHito, editaHito, getHitosAlumno, getHitosDisplayPadre, getAlumnosGrupo }

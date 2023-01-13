@@ -4,6 +4,8 @@ const Reportes = require('../controllers/reportController.js');
 
 router.get('/getsemestre', Reportes.getSemestre);
 
+router.get('/getsemestres', Reportes.getSemestres);
+
 router.post('/newsemestre', Reportes.cambiarSemestre);
 
 router.post('/especificafechareporte', Reportes.especificaFechaReporte);

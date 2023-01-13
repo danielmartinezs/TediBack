@@ -21,6 +21,16 @@ const getSemestre = (req, res) => {
     })
 }
 
+const getSemestres = (req, res) => {
+    dbconnect.query('SELECT * FROM `semestre`', (err, response) => {
+        if (err) {
+            console.log(err);
+        }
+        else{
+            res.json(response);
+        }
+    })
+}
 
 const cambiarSemestre = (req, res) => {
     const { periodo, anio, fechaInicio, fechaFin } = req.body;
@@ -88,7 +98,7 @@ const getReportesAlumno = (req, res) => {
 
 const getReportesAlumnoDisponible = (req, res) => {
     const { id, semestre } = req.params;
-    dbconnect.query('SELECT `reporte`.idReporte, nombre, ruta, fechaModificado, fechaCreacion, `semestre`.`periodo` FROM `reporte`, `reporte-alumno`, `semestre` WHERE `reporte`.`idReporte` = `reporte-alumno`.`idReporte` AND `reporte-alumno`.idAlumno = ? AND `reporte`.`disponible` = 1 AND semestre.idSemestre = ?', [id, semestre], (err, response) => {
+    dbconnect.query('SELECT `reporte-semestre`.idReporte, nombre, ruta, fechaModificado, fechaCreacion FROM `reporte`, `reporte-semestre`, `reporte-alumno` WHERE `reporte`.`idReporte` = `reporte-semestre`.`idReporte` AND `reporte`.`idReporte` = `reporte-alumno`.`idReporte` AND `reporte-alumno`.idAlumno = ? AND idSemestre = ? AND `reporte`.`disponible` = 1', [id, semestre], (err, response) => {
         if(err)
             console.log(err)
         else{
@@ -227,4 +237,4 @@ const publicarReporte = (req, res) => {
     })
 }
 
-module.exports = { getSemestre, cambiarSemestre, especificaFechaReporte, getDatosLatestReporte, getReportesAlumno, getReportesAlumnoDisponible, uploadPlanSemestral, getPlanSemestral, uploadReporteSemestral, uploadRuta, uploadReporteHPV, uploadReporteEA, publicarReporte };
+module.exports = { getSemestre, getSemestres, cambiarSemestre, especificaFechaReporte, getDatosLatestReporte, getReportesAlumno, getReportesAlumnoDisponible, uploadPlanSemestral, getPlanSemestral, uploadReporteSemestral, uploadRuta, uploadReporteHPV, uploadReporteEA, publicarReporte };
